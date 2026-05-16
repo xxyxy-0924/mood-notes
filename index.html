@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>每日心情笔记</title>
+<style>
+  :root {
+    --bg: #FFF5F0;
+    --card: #FFFFFF;
+    --text: #5D4E5F;
+    --text-sub: #9B8EA3;
+    --accent: #E8A0BF;
+    --accent-hover: #D482A8;
+    --lavender: #C5B4E3;
+    --peach: #F7C5A8;
+    --blue: #A8C8F0;
+    --rose: #F0A8C8;
+    --border: #F0E6EA;
+    --shadow: 0 2px 16px rgba(180, 140, 160, 0.10);
+    --shadow-hover: 0 4px 24px rgba(180, 140, 160, 0.16);
+    --radius: 16px;
+    --radius-sm: 12px;
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(232, 160, 191, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(197, 180, 227, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 70%, rgba(168, 200, 240, 0.06) 0%, transparent 50%);
+  }
+  .container { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  /* Login Overlay */
+  .login-overlay {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; flex-direction: column; gap: 20px;
+  }
+  .login-overlay.hidden { display: none; }
+  .login-card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 32px 28px; box-shadow: var(--shadow);
+    border: 1px solid var(--border); text-align: center;
+    width: 90%; max-width: 340px;
+  }
+  .login-card .login-emoji { font-size: 48px; margin-bottom: 12px; }
+  .login-card h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .login-card p { font-size: 13px; color: var(--text-sub); margin-bottom: 20px; }
+  .login-card input {
+    width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-size: 15px; text-align: center;
+    color: var(--text); background: #FCF9FA; outline: none;
+    font-family: inherit; letter-spacing: 4px;
+    transition: all var(--transition);
+  }
+  .login-card input:focus { border-color: var(--accent); background: #FFF; }
+  .login-card .login-btn {
+    width: 100%; margin-top: 14px; padding: 12px; border: none;
+    border-radius: var(--radius-sm); font-size: 15px; font-weight: 500;
+    cursor: pointer; background: linear-gradient(135deg, var(--accent), var(--rose));
+    color: #FFF; letter-spacing: 1px; transition: all var(--transition);
+    font-family: inherit;
+  }
+  .login-card .login-btn:hover { opacity: 0.92; }
+  .login-error { color: #E08888; font-size: 13px; margin-top: 8px; display: none; }
+
+  /* Header */
+  .header { text-align: center; padding: 28px 0 20px; }
+  .header-icon { font-size: 48px; margin-bottom: 8px; animation: float 3s ease-in-out infinite; display: inline-block; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .header h1 { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: 0.5px; margin-bottom: 6px; }
+  .header .subtitle { font-size: 14px; color: var(--text-sub); max-width: 340px; margin: 0 auto; line-height: 1.6; }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed; inset: 0; background: rgba(255,245,240,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 900; flex-direction: column; gap: 12px;
+  }
+  .loading-overlay.hidden { display: none; }
+  .loading-spinner {
+    width: 36px; height: 36px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; color: var(--text-sub); }
+
+  /* Card */
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    padding: 24px 22px; box-shadow: var(--shadow);
+    margin-bottom: 24px; border: 1px solid var(--border);
+    transition: box-shadow var(--transition);
+  }
+  .section-label { font-size: 14px; font-weight: 500; color: var(--text-sub); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .mood-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  @media (max-width: 400px) { .mood-grid { grid-template-columns: repeat(3, 1fr); } }
+  .mood-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 14px 6px; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--card);
+    cursor: pointer; transition: all var(--transition);
+    font-size: 13px; color: var(--text); user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mood-btn:hover { border-color: var(--accent); background: #FFF0F5; }
+  .mood-btn:active { transform: scale(0.96); }
+  .mood-btn .emoji { font-size: 26px; transition: transform 0.2s; }
+  .mood-btn:hover .emoji { transform: scale(1.15); }
+  .mood-btn.selected { border-color: var(--accent); background: #FFF0F5; box-shadow: 0 0 0 3px rgba(232, 160, 191, 0.18); transform: translateY(-1px); }
+  .mood-btn.selected .emoji { transform: scale(1.1); }
+
+  .input-wrapper { position: relative; margin-bottom: 16px; }
+  .input-wrapper textarea {
+    width: 100%; min-height: 100px; padding: 14px 16px;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 15px; color: var(--text); background: #FCF9FA;
+    resize: vertical; font-family: inherit; line-height: 1.7;
+    transition: all var(--transition); outline: none;
+  }
+  .input-wrapper textarea:focus { border-color: var(--accent); background: #FFF; box-shadow: 0 0 0 4px rgba(232, 160, 191, 0.08); }
+  .input-wrapper textarea::placeholder { color: #C8BCC8; }
+
+  .submit-btn {
+    width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
+    font-size: 16px; font-weight: 500; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--rose));
+    color: #FFF; letter-spacing: 1px; transition: all var(--transition);
+    -webkit-tap-highlight-color: transparent; font-family: inherit;
+  }
+  .submit-btn:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(232, 160, 191, 0.35); }
+  .submit-btn:active:not(:disabled) { transform: scale(0.98); }
+  .submit-btn:disabled { background: #E0D6DC; cursor: not-allowed; }
+
+  .success-card {
+    display: none; text-align: center; padding: 32px 20px;
+    background: linear-gradient(135deg, #FFF5F8, #F8F0FF);
+    border-radius: var(--radius); border: 1.5px solid #E8D0E0;
+    animation: fadeInUp 0.5s ease; margin-bottom: 24px;
+  }
+  .success-card.show { display: block; }
+  .success-card .success-emoji { font-size: 48px; animation: popIn 0.45s ease; display: inline-block; }
+  @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+  .success-card .success-text { font-size: 17px; font-weight: 500; color: var(--text); margin-top: 12px; }
+  .success-card .success-sub { font-size: 14px; color: var(--text-sub); margin-top: 6px; }
+
+  .alert-banner {
+    display: none; padding: 14px 18px; border-radius: var(--radius-sm);
+    margin-bottom: 20px; font-size: 14px; line-height: 1.6;
+    animation: fadeInUp 0.4s ease;
+  }
+  .alert-banner.show { display: flex; align-items: flex-start; gap: 10px; }
+  .alert-banner.warning { background: #FFF4EC; border: 1.5px solid #FDD0B0; color: #B07050; }
+  .alert-banner .alert-icon { font-size: 22px; flex-shrink: 0; }
+
+  .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+  .history-header h3 { font-size: 18px; font-weight: 600; color: var(--text); }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-chip {
+    padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); font-size: 12px; cursor: pointer;
+    transition: all var(--transition); color: var(--text-sub);
+    -webkit-tap-highlight-color: transparent; font-family: inherit;
+  }
+  .filter-chip:hover { border-color: var(--accent); }
+  .filter-chip.active { background: var(--accent); color: #FFF; border-color: var(--accent); }
+
+  .history-list { display: flex; flex-direction: column; gap: 12px; }
+  .history-item {
+    background: var(--card); border-radius: var(--radius-sm);
+    padding: 18px; box-shadow: 0 1px 6px rgba(180, 140, 160, 0.06);
+    border: 1px solid var(--border); animation: fadeInUp 0.4s ease;
+    transition: box-shadow var(--transition);
+  }
+  .history-item:hover { box-shadow: var(--shadow-hover); }
+  .history-item .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .history-item .mood-tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+  .mood-tag.happy    { background: #FFF0F5; color: #C06080; }
+  .mood-tag.sad      { background: #F0F4FF; color: #6080B0; }
+  .mood-tag.angry    { background: #FFF4EC; color: #B07050; }
+  .mood-tag.wronged  { background: #F8F0FF; color: #9070B0; }
+  .mood-tag.miss     { background: #FFF0F8; color: #B06080; }
+  .mood-tag.comfort  { background: #FFF8F0; color: #C08060; }
+  .mood-tag.alone    { background: #F4F4F8; color: #8880A0; }
+  .history-item .item-time { font-size: 12px; color: var(--text-sub); flex-shrink: 0; margin-left: 8px; }
+  .history-item .item-text { font-size: 15px; color: var(--text); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  .history-item .item-actions { margin-top: 10px; display: flex; justify-content: flex-end; }
+  .delete-btn {
+    background: none; border: none; color: #C8BCC8; font-size: 12px;
+    cursor: pointer; padding: 4px 10px; border-radius: 12px;
+    transition: all var(--transition); font-family: inherit;
+  }
+  .delete-btn:hover { color: #E08888; background: #FFF0F0; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-sub); }
+  .empty-state .empty-emoji { font-size: 48px; margin-bottom: 10px; }
+  .empty-state p { font-size: 14px; }
+
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: #FFF; padding: 10px 24px;
+    border-radius: 24px; font-size: 14px; opacity: 0;
+    transition: all 0.35s ease; pointer-events: none; z-index: 999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Refresh hint */
+  .sync-hint {
+    text-align: center; margin-bottom: 16px; font-size: 12px; color: var(--text-sub);
+  }
+  .sync-hint button {
+    background: none; border: none; color: var(--accent); cursor: pointer;
+    font-size: 12px; font-family: inherit; text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+
+<!-- Password Login Overlay -->
+<div class="login-overlay hidden" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-emoji">🔐</div>
+    <h2>请输入密码</h2>
+    <p>这是我们的小秘密空间，需要密码才能进来哦~</p>
+    <input type="password" id="passwordInput" placeholder="输入密码" maxlength="20" autocomplete="off">
+    <button class="login-btn" onclick="doLogin()">进入</button>
+    <p class="login-error" id="loginError">密码不对哦，再试一次吧~</p>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <p class="loading-text">正在加载心情记录……</p>
+</div>
+
+<div class="container" id="mainContent">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">💌</div>
+    <h1>今天的心情想告诉我吗？</h1>
+    <p class="subtitle">不管是开心、难过、生气，还是想撒娇，都可以写在这里。我会认真看见你的心情。</p>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner" id="alertBanner">
+    <span class="alert-icon">💛</span>
+    <span id="alertText"></span>
+  </div>
+
+  <!-- Input Card -->
+  <div class="card" id="inputCard">
+    <div class="section-label">🌈 今天的心情是……</div>
+    <div class="mood-grid" id="moodGrid">
+      <button class="mood-btn" data-mood="开心"><span class="emoji">😊</span>开心</button>
+      <button class="mood-btn" data-mood="难过"><span class="emoji">😢</span>难过</button>
+      <button class="mood-btn" data-mood="生气"><span class="emoji">😠</span>生气</button>
+      <button class="mood-btn" data-mood="委屈"><span class="emoji">🥺</span>委屈</button>
+      <button class="mood-btn" data-mood="想你"><span class="emoji">💕</span>想你</button>
+      <button class="mood-btn" data-mood="需要安慰"><span class="emoji">🤗</span>需要安慰</button>
+      <button class="mood-btn" data-mood="想一个人静静"><span class="emoji">🌙</span>想静静</button>
+    </div>
+
+    <div class="input-wrapper">
+      <textarea id="noteText" placeholder="把今天想说的话写下来吧，我会认真听……" maxlength="500"></textarea>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitMood()">悄悄告诉我</button>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-card" id="successCard">
+    <div class="success-emoji">🌸</div>
+    <p class="success-text">你的心情我收到了</p>
+    <p class="success-sub">我会好好珍惜，也会更认真地理解你。</p>
+  </div>
+
+  <!-- Sync hint -->
+  <div class="sync-hint">
+    💡 这是共享空间，对方也能看到所有记录哦
+    <button onclick="refreshNotes()">刷新</button>
+  </div>
+
+  <!-- History -->
+  <div class="history-header">
+    <h3>📖 心情记录</h3>
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-chip active" data-filter="all">全部</button>
+      <button class="filter-chip" data-filter="生气">😠</button>
+      <button class="filter-chip" data-filter="难过">😢</button>
+      <button class="filter-chip" data-filter="委屈">🥺</button>
+    </div>
+  </div>
+  <div id="historyList" class="history-list"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Auth =====
+const NEEDS_PASSWORD = {{ needs_password | tojson }};
+let authPassword = NEEDS_PASSWORD ? '' : null;
+
+function getHeaders() {
+  const h = { 'Content-Type': 'application/json' };
+  if (authPassword) h['X-Mood-Password'] = authPassword;
+  return h;
+}
+
+if (NEEDS_PASSWORD) {
+  document.getElementById('loginOverlay').classList.remove('hidden');
+}
+
+async function doLogin() {
+  const pw = document.getElementById('passwordInput').value.trim();
+  if (!pw) return;
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw })
+  });
+  if (res.ok) {
+    authPassword = pw;
+    document.getElementById('loginOverlay').classList.add('hidden');
+    refreshNotes();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+document.getElementById('passwordInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ===== State =====
+let notes = [];
+let selectedMood = null;
+let currentFilter = 'all';
+
+const moodGrid = document.getElementById('moodGrid');
+const noteText = document.getElementById('noteText');
+const submitBtn = document.getElementById('submitBtn');
+const successCard = document.getElementById('successCard');
+const inputCard = document.getElementById('inputCard');
+const historyList = document.getElementById('historyList');
+const filterGroup = document.getElementById('filterGroup');
+const alertBanner = document.getElementById('alertBanner');
+const alertText = document.getElementById('alertText');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const toast = document.getElementById('toast');
+
+// ===== API =====
+async function fetchNotes() {
+  loadingOverlay.classList.remove('hidden');
+  try {
+    const res = await fetch('/api/notes', { headers: getHeaders() });
+    if (!res.ok) throw new Error('加载失败');
+    notes = await res.json();
+  } catch (e) {
+    showToast('加载失败，请检查网络后刷新~');
+    notes = [];
+  }
+  loadingOverlay.classList.add('hidden');
+  renderHistory();
+}
+
+async function refreshNotes() {
+  await fetchNotes();
+  showToast('已刷新~');
+}
+
+// ===== Mood Selection =====
+moodGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.mood-btn');
+  if (!btn) return;
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMood = btn.dataset.mood;
+  updateAlertBanner();
+});
+
+function updateAlertBanner() {
+  if (!selectedMood) { alertBanner.classList.remove('show', 'warning'); return; }
+  const reminders = {
+    '生气': { text: '他今天可能需要你多一点耐心和温柔哦 💛', cls: 'warning' },
+    '委屈': { text: '他今天心里可能有些小委屈，记得抱抱他 🤍', cls: 'warning' },
+    '难过': { text: '他今天心情不太好，也许一句温暖的话就能让他好起来 💙', cls: 'warning' },
+  };
+  if (reminders[selectedMood]) {
+    alertBanner.className = 'alert-banner show ' + reminders[selectedMood].cls;
+    alertText.textContent = reminders[selectedMood].text;
+  } else {
+    alertBanner.classList.remove('show', 'warning');
+  }
+}
+
+// ===== Submit =====
+async function submitMood() {
+  const text = noteText.value.trim();
+  if (!selectedMood && !text) { showToast('请先选择一种心情或写几句话吧~'); return; }
+  if (!selectedMood) { showToast('请先选择一种心情哦~'); return; }
+  if (!text) { showToast('写几句话再告诉我吧~'); return; }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '正在发送……';
+
+  try {
+    const res = await fetch('/api/notes', {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({ mood: selectedMood, text: text })
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      showToast(err.error || '发送失败，请重试~');
+      submitBtn.disabled = false;
+      submitBtn.textContent = '悄悄告诉我';
+      return;
+    }
+
+    // Success
+    inputCard.style.display = 'none';
+    successCard.classList.add('show');
+    alertBanner.classList.remove('show', 'warning');
+
+    selectedMood = null;
+    noteText.value = '';
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+
+    setTimeout(() => {
+      successCard.classList.remove('show');
+      inputCard.style.display = '';
+    }, 2500);
+
+    await fetchNotes();
+  } catch (e) {
+    showToast('网络出错了，请检查后重试~');
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = '悄悄告诉我';
+}
+
+// ===== Filter =====
+filterGroup.addEventListener('click', (e) => {
+  const chip = e.target.closest('.filter-chip');
+  if (!chip) return;
+  currentFilter = chip.dataset.filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  renderHistory();
+});
+
+// ===== Delete =====
+async function deleteNote(id) {
+  if (!confirm('确定要删除这条记录吗？')) return;
+  try {
+    const res = await fetch('/api/notes/' + id, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+    if (!res.ok) { showToast('删除失败~'); return; }
+    notes = notes.filter(n => n.id !== id);
+    renderHistory();
+  } catch (e) {
+    showToast('删除失败，请检查网络~');
+  }
+}
+
+// ===== Format Time =====
+function formatTime(iso) {
+  const d = new Date(iso);
+  const pad = n => String(n).padStart(2, '0');
+  const now = new Date();
+  const dateStr = pad(d.getMonth() + 1) + '/' + pad(d.getDate());
+  const timeStr = pad(d.getHours()) + ':' + pad(d.getMinutes());
+
+  const isToday = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+  if (isToday) return '今天 ' + timeStr;
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const isYesterday = d.getFullYear() === yesterday.getFullYear() && d.getMonth() === yesterday.getMonth() && d.getDate() === yesterday.getDate();
+  if (isYesterday) return '昨天 ' + timeStr;
+
+  return pad(d.getFullYear()) + '/' + dateStr + ' ' + timeStr;
+}
+
+function moodConfig(mood) {
+  const map = {
+    '开心': { cls: 'happy', emoji: '😊' },
+    '难过': { cls: 'sad', emoji: '😢' },
+    '生气': { cls: 'angry', emoji: '😠' },
+    '委屈': { cls: 'wronged', emoji: '🥺' },
+    '想你': { cls: 'miss', emoji: '💕' },
+    '需要安慰': { cls: 'comfort', emoji: '🤗' },
+    '想一个人静静': { cls: 'alone', emoji: '🌙' },
+  };
+  return map[mood] || { cls: '', emoji: '💬' };
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ===== Render =====
+function renderHistory() {
+  let filtered = notes;
+  if (currentFilter !== 'all') {
+    filtered = notes.filter(n => n.mood === currentFilter);
+  }
+
+  if (filtered.length === 0) {
+    historyList.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><p>还没有记录，写下今天的心情吧~</p></div>`;
+    return;
+  }
+
+  historyList.innerHTML = filtered.map(n => {
+    const m = moodConfig(n.mood);
+    return `<div class="history-item">
+        <div class="item-header">
+          <span class="mood-tag ${m.cls}">${m.emoji} ${n.mood}</span>
+          <span class="item-time">${formatTime(n.time)}</span>
+        </div>
+        <div class="item-text">${escapeHtml(n.text)}</div>
+        <div class="item-actions">
+          <button class="delete-btn" onclick="deleteNote(${n.id})">删除</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Alert for negative moods
+  if (currentFilter === 'all' && notes.length > 0) {
+    const latest = notes[0];
+    const reminders = {
+      '生气': '最近一条是"生气"，他今天可能需要你多一点耐心和温柔哦 💛',
+      '委屈': '最近一条是"委屈"，他今天心里可能有些小委屈，记得抱抱他 🤍',
+      '难过': '最近一条是"难过"，他今天心情不太好，也许一句温暖的话就能让他好起来 💙',
+    };
+    if (reminders[latest.mood]) {
+      alertBanner.className = 'alert-banner show warning';
+      alertText.textContent = reminders[latest.mood];
+    }
+  }
+}
+
+// ===== Toast =====
+let toastTimer;
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  toast.textContent = msg;
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ===== Init =====
+if (!NEEDS_PASSWORD) {
+  refreshNotes();
+}
+</script>
+</body>
+</html>
