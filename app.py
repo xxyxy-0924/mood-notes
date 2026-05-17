@@ -1,38 +1,111 @@
 """
-每日心情笔记 - Flask 后端
-部署方式：Render / Railway / PythonAnywhere 等免费平台
+每日心情笔记 - 数据持久化解决方案
+
+由于 Render 免费版容器重启会导致数据丢失，
+这里提供几种解决方案：
+
+方案1: 使用 GitHub Gist 作为外部存储
+方案2: 使用 JSONBin.io 在线 JSON 存储
+方案3: 使用免费数据库 (Supabase/PostgreSQL)
+
+当前实现使用方案2: JSONBin.io (免费且简单)
 """
+
 import os
 import json
 import threading
 from datetime import datetime
-from flask import Flask, request, jsonify, render_template, abort
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
 # ===== 配置 =====
-DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "notes.json")
-# 设置访问密码（部署前请修改！留空则不需要密码）
+# JSONBin.io 配置 (需要预先创建一个免费的 JSONBin)
+JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY", "")  # 你的 JSONBin API 密钥
+JSONBIN_BIN_ID = os.environ.get("JSONBIN_BIN_ID", "")    # 你的 JSONBin ID
+
+# 如果没有配置 JSONBin，则使用内存存储（临时方案）
+MEMORY_STORAGE = []
+storage_lock = threading.Lock()
+
+# 访问密码
 ACCESS_PASSWORD = os.environ.get("MOOD_PASSWORD", "")
 
-data_lock = threading.Lock()
+
+def load_notes_from_jsonbin():
+    """从 JSONBin 加载心情记录"""
+    if not JSONBIN_API_KEY or not JSONBIN_BIN_ID:
+        return load_notes_from_memory()
+    
+    try:
+        import requests
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_API_KEY
+        }
+        response = requests.get(f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}", headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('record', [])
+        else:
+            print(f"JSONBin load error: {response.status_code}")
+            return load_notes_from_memory()
+    except Exception as e:
+        print(f"Error loading from JSONBin: {e}")
+        return load_notes_from_memory()
+
+
+def save_notes_to_jsonbin(notes):
+    """保存心情记录到 JSONBin"""
+    if not JSONBIN_API_KEY or not JSONBIN_BIN_ID:
+        save_notes_to_memory(notes)
+        return
+    
+    try:
+        import requests
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Master-Key': JSONBIN_API_KEY,
+            'X-BIN-VERSIONING': 'false'  # 不启用版本控制，覆盖现有数据
+        }
+        response = requests.put(f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}", 
+                               json={"notes": notes}, headers=headers)
+        if response.status_code != 200:
+            print(f"JSONBin save error: {response.status_code}")
+            save_notes_to_memory(notes)
+    except Exception as e:
+        print(f"Error saving to JSONBin: {e}")
+        save_notes_to_memory(notes)
+
+
+def load_notes_from_memory():
+    """从内存加载心情记录（临时方案）"""
+    global MEMORY_STORAGE
+    with storage_lock:
+        return MEMORY_STORAGE.copy()
+
+
+def save_notes_to_memory(notes):
+    """保存心情记录到内存（临时方案）"""
+    global MEMORY_STORAGE
+    with storage_lock:
+        MEMORY_STORAGE = notes
 
 
 def load_notes():
-    """从 JSON 文件加载心情记录"""
-    if not os.path.exists(DATA_FILE):
-        return []
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except (json.JSONDecodeError, IOError):
-        return []
+    """从持久化存储加载心情记录"""
+    if JSONBIN_API_KEY and JSONBIN_BIN_ID:
+        return load_notes_from_jsonbin()
+    else:
+        return load_notes_from_memory()
 
 
 def save_notes(notes):
-    """保存心情记录到 JSON 文件"""
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(notes, f, ensure_ascii=False, indent=2)
+    """保存心情记录到持久化存储"""
+    if JSONBIN_API_KEY and JSONBIN_BIN_ID:
+        save_notes_to_jsonbin(notes)
+    else:
+        save_notes_to_memory(notes)
 
 
 # ===== 页面路由 =====
@@ -72,8 +145,7 @@ def api_get_notes():
     if not check_auth():
         return jsonify({"error": "需要密码验证"}), 401
 
-    with data_lock:
-        notes = load_notes()
+    notes = load_notes()
     return jsonify(notes)
 
 
@@ -87,31 +159,52 @@ def api_create_note():
     if not data:
         return jsonify({"error": "请求数据格式错误"}), 400
 
-    mood = data.get("mood", "").strip()
+    mood_input = data.get("mood", "").strip()
     text = data.get("text", "").strip()
+    sender = data.get("sender", "").strip()[:20]  # 限制发送者名称长度
 
-    if not mood:
+    if not mood_input:
         return jsonify({"error": "请选择一种心情"}), 400
     if not text:
         return jsonify({"error": "请写几句话"}), 400
     if len(text) > 500:
         return jsonify({"error": "内容不能超过 500 字"}), 400
 
+    # Split multiple moods by comma and validate each
+    moods = [m.strip() for m in mood_input.split(',')]
     valid_moods = ["开心", "难过", "生气", "委屈", "想你", "需要安慰", "想一个人静静"]
-    if mood not in valid_moods:
-        return jsonify({"error": "心情类型无效"}), 400
+    
+    for m in moods:
+        if m not in valid_moods:
+            return jsonify({"error": f"心情类型无效: {m}"}), 400
+    
+    # Join multiple moods with '+' for display
+    mood = '+'.join(moods)
+    
+    if not sender:
+        sender = "匿名"
+
+    # 获取并处理标签
+    tags_input = data.get("tags", "").strip()
+    tags = []
+    if tags_input:
+        # 分割标签并去除空白
+        tags = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
+        # 限制每个标签长度和总数
+        tags = [tag[:20] for tag in tags[:10]]  # 最多10个标签，每个最多20字符
 
     note = {
         "id": int(datetime.utcnow().timestamp() * 1000),
         "mood": mood,
         "text": text,
+        "sender": sender,
+        "tags": tags,
         "time": datetime.utcnow().isoformat() + "Z",
     }
 
-    with data_lock:
-        notes = load_notes()
-        notes.insert(0, note)
-        save_notes(notes)
+    notes = load_notes()
+    notes.insert(0, note)
+    save_notes(notes)
 
     return jsonify(note), 201
 
@@ -122,21 +215,25 @@ def api_delete_note(note_id):
     if not check_auth():
         return jsonify({"error": "需要密码验证"}), 401
 
-    with data_lock:
-        notes = load_notes()
-        original_len = len(notes)
-        notes = [n for n in notes if n["id"] != note_id]
-        if len(notes) == original_len:
-            return jsonify({"error": "记录不存在"}), 404
-        save_notes(notes)
-
+    notes = load_notes()
+    original_len = len(notes)
+    notes = [n for n in notes if n["id"] != note_id]
+    if len(notes) == original_len:
+        return jsonify({"error": "记录不存在"}), 404
+    
+    save_notes(notes)
     return jsonify({"ok": True})
 
 
 # ===== 健康检查 =====
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok", "time": datetime.utcnow().isoformat() + "Z"})
+    storage_type = "jsonbin" if JSONBIN_API_KEY and JSONBIN_BIN_ID else "memory (temporary)"
+    return jsonify({
+        "status": "ok", 
+        "time": datetime.utcnow().isoformat() + "Z",
+        "storage": storage_type
+    })
 
 
 # ===== 启动 =====
