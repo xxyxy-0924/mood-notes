@@ -1,88 +1,69 @@
 # 每日心情笔记 - 部署指南
 
-## 解决数据丢失问题
+这个版本默认使用 Flask + Gunicorn 部署，推荐部署到 Render、Railway 或其他支持 Python Web Service 的平台。
 
-由于 Render 免费版容器重启会导致数据丢失，我们需要使用外部存储服务。
+## 必填配置
 
-## 方案1: 使用 JSONBin.io (推荐 - 简单易用)
+安装依赖：
 
-### 1. 注册 JSONBin.io
-- 访问 https://jsonbin.io/
-- 注册免费账户
-
-### 2. 创建新的 JSON Bin
-- 登录后点击 "Create new"
-- 将你的数据结构粘贴进去（或留空）
-- 记下生成的 "Bin ID"
-
-### 3. 获取 API 密钥
-- 在 "Account" 页面找到 "API Key"
-
-### 4. 部署到 Render
-在 Render 的环境变量中设置：
-```
-JSONBIN_API_KEY = 你的API密钥
-JSONBIN_BIN_ID = 你的BinID
-MOOD_PASSWORD = 你们的共同密码（可选）
+```bash
+pip install -r requirements.txt
 ```
 
-## 方案2: 使用 Supabase (功能更强)
+启动命令：
 
-### 1. 注册 Supabase
-- 访问 https://supabase.io/
-- 创建免费项目
-
-### 2. 创建表
-```sql
-CREATE TABLE mood_notes (
-  id BIGINT PRIMARY KEY,
-  mood TEXT NOT NULL,
-  text TEXT NOT NULL,
-  sender TEXT DEFAULT '匿名',
-  time TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
+```bash
+gunicorn app:app --bind 0.0.0.0:$PORT
 ```
 
-### 3. 部署到 Render
-在 Render 的环境变量中设置：
-```
-SUPABASE_URL = 你的项目URL
-SUPABASE_KEY = 你的 anon key
-MOOD_PASSWORD = 你们的共同密码（可选）
+`Procfile` 可以保持：
+
+```text
+web: gunicorn app:app --bind 0.0.0.0:$PORT
 ```
 
-## 方案3: 使用默认（临时）
-如果不设置任何外部存储，数据会保存在内存中，容器重启后会丢失。
+## 推荐环境变量
 
----
-
-## 部署步骤
-
-1. 将代码推送到 GitHub 仓库
-2. 在 Render 创建 Web Service，连接你的仓库
-3. 在环境变量中配置上述参数
-4. 部署完成后即可使用
-
-## 环境变量说明
-
-- `JSONBIN_API_KEY` / `JSONBIN_BIN_ID`: JSONBin 配置
-- `SUPABASE_URL` / `SUPABASE_KEY`: Supabase 配置  
-- `DATABASE_URL`: PostgreSQL 数据库连接字符串
-- `MOOD_PASSWORD`: 访问密码（可选）
-- `FLASK_DEBUG`: 调试模式（默认 0）
-
-## 文件结构
-
-```
-mood-notes/
-├── app_persistent.py    ← 使用外部存储的主程序
-├── app.py              ← 原始版本（本地存储）
-├── requirements.txt
-├── Procfile
-├── .gitignore
-└── templates/
-    └── index.html
+```text
+JSONBIN_API_KEY=你的 JSONBin API Key
+JSONBIN_BIN_ID=你的 Bin ID
+MOOD_PASSWORD=访问密码，可选但推荐
+FLASK_DEBUG=0
 ```
 
-要使用持久化版本，请将 `app_persistent.py` 重命名为 `app.py` 再部署。
+如果没有配置 `JSONBIN_API_KEY` 和 `JSONBIN_BIN_ID`，应用会回退到内存存储。内存存储只适合测试，Render 免费实例重启后记录会丢失。
+
+## JSONBin 数据格式
+
+新版后端会保存为：
+
+```json
+{
+  "notes": [],
+  "updated_at": "2026-05-23T00:00:00Z"
+}
+```
+
+同时兼容旧版直接保存数组的格式，所以已有数据不需要手动迁移。
+
+## API
+
+- `GET /api/notes`：获取所有心情记录
+- `POST /api/notes`：新增记录
+- `DELETE /api/notes/<id>`：删除记录
+- `GET /api/stats`：获取统计数据
+- `GET /health`：健康检查
+
+如果设置了 `MOOD_PASSWORD`，前端会先要求输入密码，API 请求需要携带：
+
+```text
+X-Mood-Password: 你的访问密码
+```
+
+## 本次改进点
+
+- 修复 JSONBin 保存和读取格式不一致导致线上新增记录失败的问题。
+- 读取旧数据时自动清洗字段，避免坏数据拖垮页面。
+- JSONBin 请求增加超时和错误日志。
+- 新增 `/api/stats` 和更完整的 `/health`。
+- 前端支持多选心情、昵称、标签、字数提示、完整筛选和更稳的异常提示。
