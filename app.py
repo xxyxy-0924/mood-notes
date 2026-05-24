@@ -16,6 +16,9 @@ app = Flask(__name__)
 JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY", "").strip()
 JSONBIN_BIN_ID = os.environ.get("JSONBIN_BIN_ID", "").strip()
 ACCESS_PASSWORD = os.environ.get("MOOD_PASSWORD", "")
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip() or "deepseek-chat"
+DEFAULT_WEATHER_CITY = os.environ.get("DEFAULT_WEATHER_CITY", "厦门海沧").strip() or "厦门海沧"
 
 TEXT_MOODS = [
     "开心",
@@ -29,6 +32,7 @@ TEXT_MOODS = [
 EMOJI_MOODS = ["😋", "🥲", "🥹", "🧐", "🤓", "😜", "😝", "😞", "😟", "😣", "😖", "☹️", "😓", "😱", "😨", "😰"]
 VALID_MOODS = TEXT_MOODS + EMOJI_MOODS
 REACTIONS = ["抱抱你", "收到啦", "想你了"]
+NEGATIVE_MOODS = {"难过", "生气", "委屈", "需要安慰", "😞", "😟", "😣", "😖", "☹️", "😓", "😱", "😨", "😰", "🥲", "🥹"}
 MAX_TEXT_LENGTH = 500
 MAX_SENDER_LENGTH = 20
 MAX_TAGS = 10
@@ -36,6 +40,20 @@ MAX_TAG_LENGTH = 20
 
 MEMORY_STORAGE = []
 storage_lock = threading.Lock()
+
+WEATHER_CODES = {
+    0: "晴", 1: "多云", 2: "多云", 3: "阴", 45: "雾", 48: "雾",
+    51: "小雨", 53: "小雨", 55: "小雨", 56: "冻雨", 57: "冻雨",
+    61: "小雨", 63: "中雨", 65: "大雨", 66: "冻雨", 67: "冻雨",
+    71: "小雪", 73: "中雪", 75: "大雪", 77: "雪",
+    80: "阵雨", 81: "阵雨", 82: "强阵雨", 85: "阵雪", 86: "阵雪",
+    95: "雷雨", 96: "雷雨", 99: "雷雨",
+}
+WEATHER_EMOJIS = {
+    "晴": "☀️", "多云": "⛅", "阴": "☁️", "雾": "🌫️", "小雨": "🌦️",
+    "中雨": "🌧️", "大雨": "🌧️", "阵雨": "🌧️", "强阵雨": "⛈️", "雷雨": "⛈️",
+    "小雪": "🌨️", "中雪": "🌨️", "大雪": "❄️", "雪": "❄️", "冻雨": "🌧️",
+}
 
 
 def utc_now_iso():
@@ -205,6 +223,214 @@ def save_notes(notes):
     return True
 
 
+def weather_text(code):
+    return WEATHER_CODES.get(int(code or 0), "多云")
+
+
+def weather_emoji(text):
+    return WEATHER_EMOJIS.get(text, "🌤️")
+
+
+def wind_level(speed_kmh):
+    try:
+        speed = float(speed_kmh or 0)
+    except (TypeError, ValueError):
+        speed = 0
+    levels = [1, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117]
+    for index, limit in enumerate(levels):
+        if speed < limit:
+            return index
+    return 12
+
+
+def weather_reminder(today, tomorrow, precip_probability):
+    if tomorrow in {"中雨", "大雨", "阵雨", "强阵雨", "雷雨"} or precip_probability >= 55:
+        return "明天可能有雨，出门记得带伞。"
+    if today in {"大雨", "强阵雨", "雷雨"}:
+        return "今天雨势明显，尽量慢一点出门。"
+    if today in {"晴", "多云"}:
+        return "天气还不错，也别忘了照顾好自己。"
+    if today in {"小雪", "中雪", "大雪", "雪"}:
+        return "天气偏冷，记得穿暖一点。"
+    return "今天也要把自己照顾好。"
+
+
+def geocode_city(city):
+    if city == "厦门海沧":
+        return {"name": "厦门海沧", "latitude": 24.4845, "longitude": 118.0329}
+
+    response = requests.get(
+        "https://geocoding-api.open-meteo.com/v1/search",
+        params={"name": city, "count": 1, "language": "zh", "format": "json"},
+        timeout=8,
+    )
+    response.raise_for_status()
+    results = response.json().get("results") or []
+    if not results:
+        raise ValueError("city not found")
+    result = results[0]
+    return {
+        "name": result.get("name") or city,
+        "latitude": result["latitude"],
+        "longitude": result["longitude"],
+    }
+
+
+def fetch_weather(city=None, lat=None, lon=None):
+    if lat is not None and lon is not None:
+        location = {"name": "当前位置", "latitude": float(lat), "longitude": float(lon)}
+    else:
+        location = geocode_city(city or DEFAULT_WEATHER_CITY)
+
+    response = requests.get(
+        "https://api.open-meteo.com/v1/forecast",
+        params={
+            "latitude": location["latitude"],
+            "longitude": location["longitude"],
+            "current": "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m",
+            "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+            "timezone": "auto",
+            "forecast_days": 2,
+        },
+        timeout=8,
+    )
+    response.raise_for_status()
+    data = response.json()
+    current = data.get("current", {})
+    daily = data.get("daily", {})
+    today_code = current.get("weather_code", 3)
+    tomorrow_codes = daily.get("weather_code") or [today_code, today_code]
+    tomorrow_code = tomorrow_codes[1] if len(tomorrow_codes) > 1 else today_code
+    today_text = weather_text(today_code)
+    tomorrow_text = weather_text(tomorrow_code)
+    precip = daily.get("precipitation_probability_max") or [0, 0]
+    tomorrow_precip = int(precip[1] if len(precip) > 1 and precip[1] is not None else 0)
+
+    return {
+        "ok": True,
+        "city": location["name"],
+        "temperature": round(float(current.get("temperature_2m", 0))),
+        "weather": today_text,
+        "emoji": weather_emoji(today_text),
+        "humidity": int(current.get("relative_humidity_2m") or 0),
+        "wind_level": wind_level(current.get("wind_speed_10m")),
+        "today_high": round(float((daily.get("temperature_2m_max") or [0])[0] or 0)),
+        "today_low": round(float((daily.get("temperature_2m_min") or [0])[0] or 0)),
+        "tomorrow": tomorrow_text,
+        "tomorrow_precipitation": tomorrow_precip,
+        "reminder": weather_reminder(today_text, tomorrow_text, tomorrow_precip),
+        "source": "open-meteo",
+    }
+
+
+def split_note_moods(note):
+    return [mood for mood in str(note.get("mood", "")).split("+") if mood]
+
+
+def local_analysis(notes):
+    recent = notes[:10]
+    total = len(notes)
+    if not total:
+        return {
+            "summary": "还没有记录，今天可以先写下第一句话。",
+            "suggestion": "不用写得很完整，几个字也算认真照顾自己。",
+            "tone": "empty",
+            "source": "local",
+        }
+
+    recent_moods = [mood for note in recent for mood in split_note_moods(note)]
+    negative_count = sum(1 for mood in recent_moods if mood in NEGATIVE_MOODS)
+    positive_count = sum(1 for mood in recent_moods if mood in {"开心", "😋", "😜", "😝", "🤓"})
+
+    unique_days = []
+    for note in notes:
+        day = str(note.get("time", ""))[:10]
+        if day and day not in unique_days:
+            unique_days.append(day)
+    streak_hint = f"你已经留下 {total} 条心情记录，" if total >= 2 else "你已经开始记录自己，"
+
+    if negative_count >= max(2, positive_count + 1):
+        return {
+            "summary": f"{streak_hint}最近低落和紧张的信号偏多。",
+            "suggestion": "今晚适合早点休息，或者给自己安排一件很小但舒服的事。",
+            "tone": "care",
+            "source": "local",
+        }
+    if positive_count >= 2:
+        return {
+            "summary": f"{streak_hint}最近出现了不少轻松的情绪。",
+            "suggestion": "可以把让你开心的小细节记下来，之后会很有用。",
+            "tone": "bright",
+            "source": "local",
+        }
+    if len(unique_days) >= 3:
+        return {
+            "summary": f"{streak_hint}连续关注自己的节奏正在变稳定。",
+            "suggestion": "继续这样慢慢写，小蜥蜴会帮你把变化收起来。",
+            "tone": "steady",
+            "source": "local",
+        }
+    return {
+        "summary": f"{streak_hint}情绪还在慢慢展开。",
+        "suggestion": "今天可以多写一点原因，小蜥蜴会更懂你。",
+        "tone": "gentle",
+        "source": "local",
+    }
+
+
+def deepseek_analysis(notes):
+    if not DEEPSEEK_API_KEY:
+        return None
+
+    recent = [
+        {
+            "mood": note.get("mood"),
+            "text": note.get("text"),
+            "time": note.get("time"),
+            "tags": note.get("tags", []),
+        }
+        for note in notes[:8]
+    ]
+    if not recent:
+        return None
+
+    prompt = (
+        "你是一个温柔克制的心情日记助手，名字叫小蜥蜴。"
+        "请根据用户最近的心情记录，用中文输出 JSON，字段只有 summary、suggestion、tone。"
+        "summary 不超过 32 字，suggestion 不超过 42 字，tone 从 care/bright/steady/gentle 中选一个。"
+        "不要诊断疾病，不要夸张，不要说教。记录如下："
+        f"{recent}"
+    )
+    try:
+        response = requests.post(
+            "https://api.deepseek.com/chat/completions",
+            headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}", "Content-Type": "application/json"},
+            json={
+                "model": DEEPSEEK_MODEL,
+                "messages": [
+                    {"role": "system", "content": "你只输出紧凑 JSON，不要 Markdown。"},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.7,
+                "max_tokens": 220,
+            },
+            timeout=12,
+        )
+        response.raise_for_status()
+        content = response.json()["choices"][0]["message"]["content"].strip()
+        import json
+        parsed = json.loads(content)
+        return {
+            "summary": str(parsed.get("summary") or "小蜥蜴看见了你最近的心情。")[:60],
+            "suggestion": str(parsed.get("suggestion") or "先照顾好今天的自己。")[:80],
+            "tone": str(parsed.get("tone") or "gentle")[:20],
+            "source": "deepseek",
+        }
+    except Exception as exc:  # noqa: BLE001
+        app.logger.warning("DeepSeek analysis fallback: %s", exc)
+        return None
+
+
 @app.route("/")
 def index():
     return render_template("index.html", needs_password=bool(ACCESS_PASSWORD))
@@ -239,6 +465,43 @@ def check_auth():
 
 def unauthorized_response():
     return jsonify({"error": "需要密码验证"}), 401
+
+
+@app.route("/api/weather", methods=["GET"])
+def api_weather():
+    city = request.args.get("city", DEFAULT_WEATHER_CITY).strip() or DEFAULT_WEATHER_CITY
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
+    try:
+        weather = fetch_weather(city=city, lat=lat, lon=lon) if lat and lon else fetch_weather(city=city)
+        return jsonify(weather)
+    except Exception as exc:  # noqa: BLE001
+        app.logger.warning("Weather fallback: %s", exc)
+        return jsonify({
+            "ok": False,
+            "city": city,
+            "temperature": None,
+            "weather": "暂不可用",
+            "emoji": "🌤️",
+            "humidity": None,
+            "wind_level": None,
+            "today_high": None,
+            "today_low": None,
+            "tomorrow": "未知",
+            "tomorrow_precipitation": None,
+            "reminder": "天气暂时没有取到，出门前再看一眼窗外。",
+            "source": "fallback",
+        }), 200
+
+
+@app.route("/api/analysis", methods=["GET"])
+def api_analysis():
+    if not check_auth():
+        return unauthorized_response()
+
+    notes = load_notes()
+    analysis = deepseek_analysis(notes) or local_analysis(notes)
+    return jsonify(analysis)
 
 
 @app.route("/api/notes", methods=["GET"])
@@ -360,6 +623,8 @@ def health():
         "time": utc_now_iso(),
         "storage": storage_type,
         "password_enabled": bool(ACCESS_PASSWORD),
+        "default_weather_city": DEFAULT_WEATHER_CITY,
+        "deepseek_enabled": bool(DEEPSEEK_API_KEY),
     })
 
 
