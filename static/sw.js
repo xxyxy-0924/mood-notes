@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mood-notes-pwa-v5';
+const CACHE_NAME = 'mood-notes-pwa-v6';
 const APP_SHELL = [
   '/',
-  '/manifest.webmanifest?v=photo2',
-  '/static/icon.svg?v=photo2',
-  '/static/maskable-icon.svg?v=photo2',
+  '/manifest.webmanifest?v=photo3',
+  '/static/app-icon-192.png?v=photo3',
+  '/static/app-icon-512.png?v=photo3',
   '/static/splash.svg'
 ];
 
