@@ -2,7 +2,7 @@
   "name": "小蜥蜴心情屋",
   "short_name": "小蜥蜴",
   "description": "每天记录心情、收到抱抱和回应的小空间。",
-  "start_url": "/?source=pwa",
+  "start_url": "/?source=pwa&v=photo2",
   "scope": "/",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone"],
@@ -12,13 +12,13 @@
   "categories": ["lifestyle", "productivity"],
   "icons": [
     {
-      "src": "/static/icon.svg",
+      "src": "/static/icon.svg?v=photo2",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "/static/maskable-icon.svg",
+      "src": "/static/maskable-icon.svg?v=photo2",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
