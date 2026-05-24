@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="小蜥蜴心情屋可裁剪图标">
+  <rect width="512" height="512" fill="#fff4f8"/>
+  <circle cx="256" cy="256" r="196" fill="#ffd9e9"/>
+  <path d="M128 156c26-31 66-35 95-9 25 23 26 64 1 88-28 27-73 20-99-12-20-25-19-47 3-67ZM384 156c-26-31-66-35-95-9-25 23-26 64-1 88 28 27 73 20 99-12 20-25 19-47-3-67Z" fill="#302838"/>
+  <circle cx="256" cy="280" r="130" fill="#fff"/>
+  <path d="M190 276c0-14 11-25 25-25s25 11 25 25-11 25-25 25-25-11-25-25Zm82 0c0-14 11-25 25-25s25 11 25 25-11 25-25 25-25-11-25-25Z" fill="#302838"/>
+  <path d="M236 324c13 13 31 13 44 0" fill="none" stroke="#e878ad" stroke-width="13" stroke-linecap="round"/>
+  <path d="M174 233c0-38 26-66 64-67M337 216c22 23 24 52 8 78" fill="none" stroke="#8bd48c" stroke-width="25" stroke-linecap="round"/>
+  <path d="M245 94c24 11 38 34 35 59-25 2-49-11-61-35l26-24Zm23 0c-24 11-38 34-35 59 25 2 49-11 61-35l-26-24Z" fill="#e878ad"/>
+  <circle cx="256" cy="126" r="18" fill="#ffbdd9"/>
+</svg>
