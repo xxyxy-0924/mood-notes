@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --page-bg: #fff1f6;
   --scene-top: #ffe9f3;
   --scene-bottom: #fff9fb;
@@ -10,7 +10,7 @@
   --mascot-left: "🐰";
   --mascot-right: "🦎";
   --scene-extra: "🌸";
-  --scene-image: url("/static/themes/templates/milk-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/milk-bg.png?v=skin9");
   --scene-pattern: radial-gradient(circle at 14% 20%, rgba(255,255,255,.95) 0 24px, transparent 25px),
                    radial-gradient(circle at 23% 16%, rgba(255,255,255,.75) 0 20px, transparent 21px),
                    radial-gradient(circle at 82% 18%, rgba(255,255,255,.72) 0 30px, transparent 31px),
@@ -30,7 +30,7 @@ html[data-theme="night"] {
   --mascot-left: "☾";
   --mascot-right: "🦎";
   --scene-extra: "🦇";
-  --scene-image: url("/static/themes/templates/night-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/night-bg.png?v=skin9");
   --scene-pattern: radial-gradient(circle at 18% 22%, rgba(221,150,255,.22) 0 28px, transparent 29px),
                    radial-gradient(circle at 86% 18%, rgba(125,74,205,.35) 0 38px, transparent 39px),
                    radial-gradient(circle at 12% 70%, rgba(255,120,210,.22) 0 4px, transparent 5px),
@@ -49,7 +49,7 @@ html[data-theme="blue"] {
   --mascot-left: "☁️";
   --mascot-right: "🦎";
   --scene-extra: "🌈";
-  --scene-image: url("/static/themes/templates/blue-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/blue-bg.png?v=skin9");
   --scene-pattern: radial-gradient(circle at 14% 24%, rgba(255,255,255,.98) 0 32px, transparent 33px),
                    radial-gradient(circle at 29% 18%, rgba(255,255,255,.82) 0 24px, transparent 25px),
                    radial-gradient(circle at 83% 22%, rgba(255,255,255,.78) 0 34px, transparent 35px),
@@ -68,7 +68,7 @@ html[data-theme="berry"] {
   --mascot-left: "🌷";
   --mascot-right: "🦎";
   --scene-extra: "🍓";
-  --scene-image: url("/static/themes/templates/berry-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/berry-bg.png?v=skin9");
   --scene-pattern: repeating-linear-gradient(90deg, rgba(255,120,143,.10) 0 16px, transparent 16px 32px),
                    radial-gradient(circle at 16% 18%, rgba(255,255,255,.82) 0 22px, transparent 23px),
                    radial-gradient(circle at 84% 17%, rgba(255,145,165,.26) 0 34px, transparent 35px),
@@ -396,21 +396,21 @@ html[data-theme="blue"] .hero::before {
 
 html:not([data-theme]),
 html[data-theme="milk"] {
-  --scene-image: url("/static/themes/templates/milk-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/milk-bg.png?v=skin9");
 }
 
 html[data-theme="milk"] body::before,
 html:not([data-theme]) body::before {
   background:
     linear-gradient(180deg, rgba(255, 246, 250, .72), rgba(255, 241, 246, .86)),
-    url("/static/themes/templates/milk-wall.png?v=skin8") center top / min(430px, 100vw) auto repeat-y !important;
+    url("/static/themes/templates/milk-wall.png?v=skin9") center top / min(430px, 100vw) auto repeat-y !important;
 }
 
 html[data-theme="milk"] .hero,
 html:not([data-theme]) .hero {
   background:
     linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.14)),
-    url("/static/themes/templates/milk-bg.png?v=skin8") center center / cover no-repeat !important;
+    url("/static/themes/templates/milk-bg.png?v=skin9") center center / cover no-repeat !important;
 }
 
 html[data-theme="milk"] .hero::before,
@@ -422,7 +422,7 @@ html:not([data-theme]) .hero::before {
   top: 28px !important;
   width: 108px;
   height: 146px;
-  background: url("/static/themes/templates/milk-left.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/milk-left.png?v=skin9") center / contain no-repeat;
   opacity: .96 !important;
   filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .16));
 }
@@ -436,19 +436,19 @@ html:not([data-theme]) .hero::after {
   top: 28px !important;
   width: 112px;
   height: 146px;
-  background: url("/static/themes/templates/milk-right.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/milk-right.png?v=skin9") center / contain no-repeat;
   opacity: .96 !important;
   filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .14));
 }
 
 html[data-theme="night"] {
-  --scene-image: url("/static/themes/templates/night-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/night-bg.png?v=skin9");
 }
 
 html[data-theme="night"] .hero {
   background:
     linear-gradient(180deg, rgba(29, 12, 42, .18), rgba(16, 7, 29, .42)),
-    url("/static/themes/templates/night-bg.png?v=skin8") center center / cover no-repeat !important;
+    url("/static/themes/templates/night-bg.png?v=skin9") center center / cover no-repeat !important;
 }
 
 html[data-theme="night"] .app::after {
@@ -464,7 +464,7 @@ html[data-theme="night"] .app::after {
   z-index: -1 !important;
   background:
     linear-gradient(0deg, rgba(16, 7, 29, .94), rgba(16, 7, 29, 0)),
-    url("/static/themes/templates/night-bottom.png?v=skin8") center bottom / 360px auto no-repeat !important;
+    url("/static/themes/templates/night-bottom.png?v=skin9") center bottom / 360px auto no-repeat !important;
   opacity: .38 !important;
 }
 
@@ -476,7 +476,7 @@ html[data-theme="night"] .hero::before {
   top: 30px !important;
   width: 112px;
   height: 146px;
-  background: url("/static/themes/templates/night-left.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/night-left.png?v=skin9") center / contain no-repeat;
   opacity: .92 !important;
   filter: drop-shadow(0 0 18px rgba(216, 130, 255, .32));
 }
@@ -489,25 +489,25 @@ html[data-theme="night"] .hero::after {
   top: 30px !important;
   width: 112px;
   height: 146px;
-  background: url("/static/themes/templates/night-right.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/night-right.png?v=skin9") center / contain no-repeat;
   opacity: .92 !important;
   filter: drop-shadow(0 0 18px rgba(216, 130, 255, .28));
 }
 
 html[data-theme="blue"] {
-  --scene-image: url("/static/themes/templates/blue-bg.png?v=skin8");
+  --scene-image: url("/static/themes/templates/blue-bg.png?v=skin9");
 }
 
 html[data-theme="blue"] body::before {
   background:
     linear-gradient(180deg, rgba(239, 250, 255, .76), rgba(234, 248, 255, .88)),
-    url("/static/themes/templates/blue-wall.png?v=skin8") center top / min(430px, 100vw) auto repeat-y !important;
+    url("/static/themes/templates/blue-wall.png?v=skin9") center top / min(430px, 100vw) auto repeat-y !important;
 }
 
 html[data-theme="blue"] .hero {
   background:
     linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12)),
-    url("/static/themes/templates/blue-bg.png?v=skin8") center center / cover no-repeat !important;
+    url("/static/themes/templates/blue-bg.png?v=skin9") center center / cover no-repeat !important;
 }
 
 html[data-theme="blue"] .hero::before {
@@ -518,7 +518,7 @@ html[data-theme="blue"] .hero::before {
   top: 30px !important;
   width: 106px;
   height: 146px;
-  background: url("/static/themes/templates/blue-left.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/blue-left.png?v=skin9") center / contain no-repeat;
   opacity: .94 !important;
   filter: drop-shadow(0 10px 14px rgba(77, 160, 223, .14));
 }
@@ -531,7 +531,7 @@ html[data-theme="blue"] .hero::after {
   top: 30px !important;
   width: 112px;
   height: 146px;
-  background: url("/static/themes/templates/blue-right.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/blue-right.png?v=skin9") center / contain no-repeat;
   opacity: .94 !important;
   filter: drop-shadow(0 10px 14px rgba(77, 160, 223, .14));
 }
@@ -539,15 +539,15 @@ html[data-theme="blue"] .hero::after {
 html[data-theme="berry"] body::before {
   background:
     linear-gradient(180deg, rgba(255, 246, 249, .70), rgba(255, 240, 244, .84)),
-    url("/static/themes/templates/berry-wall.png?v=skin8") center top / min(430px, 100vw) auto repeat-y !important;
+    url("/static/themes/templates/berry-wall.png?v=skin9") center top / min(430px, 100vw) auto repeat-y !important;
   opacity: .88;
 }
 
 html[data-theme="berry"] body::after {
   background:
     linear-gradient(180deg, rgba(255, 244, 247, .54), rgba(255, 255, 255, .18)),
-    url("/static/themes/templates/berry-right.png?v=skin8") right 38px / 128px auto no-repeat,
-    url("/static/themes/templates/berry-left.png?v=skin8") left 520px / 132px auto no-repeat !important;
+    url("/static/themes/templates/berry-right.png?v=skin9") right 38px / 128px auto no-repeat,
+    url("/static/themes/templates/berry-left.png?v=skin9") left 520px / 132px auto no-repeat !important;
   opacity: .56 !important;
 }
 
@@ -564,7 +564,7 @@ html[data-theme="berry"] .app::before {
   z-index: -1;
   background:
     linear-gradient(0deg, rgba(255, 246, 249, .84), rgba(255, 246, 249, 0)),
-    url("/static/themes/templates/berry-bottom.png?v=skin8") center bottom / 430px auto no-repeat;
+    url("/static/themes/templates/berry-bottom.png?v=skin9") center bottom / 430px auto no-repeat;
   opacity: .46;
 }
 
@@ -577,14 +577,14 @@ html[data-theme="berry"] .app::after {
   transform: none !important;
   z-index: 1 !important;
   pointer-events: none !important;
-  background: url("/static/themes/templates/berry-left.png?v=skin8") 0 0 / 104px auto no-repeat !important;
+  background: url("/static/themes/templates/berry-left.png?v=skin9") 0 0 / 104px auto no-repeat !important;
   opacity: .82 !important;
 }
 
 html[data-theme="berry"] .hero {
   background:
     linear-gradient(180deg, rgba(255, 245, 249, .12), rgba(255, 255, 255, .10)),
-    url("/static/themes/templates/berry-bg.png?v=skin8") center center / cover no-repeat !important;
+    url("/static/themes/templates/berry-bg.png?v=skin9") center center / cover no-repeat !important;
 }
 
 html[data-theme="berry"] .hero::before {
@@ -595,7 +595,7 @@ html[data-theme="berry"] .hero::before {
   top: 28px !important;
   width: 108px;
   height: 146px;
-  background: url("/static/themes/templates/berry-left.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/berry-left.png?v=skin9") center / contain no-repeat;
   opacity: .95 !important;
   filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .18));
 }
@@ -608,7 +608,7 @@ html[data-theme="berry"] .hero::after {
   top: 26px !important;
   width: 116px;
   height: 150px;
-  background: url("/static/themes/templates/berry-right.png?v=skin8") center / contain no-repeat;
+  background: url("/static/themes/templates/berry-right.png?v=skin9") center / contain no-repeat;
   opacity: .94 !important;
   filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .16));
 }
@@ -617,6 +617,134 @@ html[data-theme="berry"] .card,
 html[data-theme="berry"] .quote {
   background: rgba(255, 255, 255, .82) !important;
   border-color: rgba(255, 151, 172, .30) !important;
+}
+
+html:not([data-theme]),
+html[data-theme="milk"] {
+  --hero-left-sticker: url("/static/themes/stickers/milk-left-sticker.png?v=skin9");
+  --hero-right-sticker: url("/static/themes/stickers/milk-right-sticker.png?v=skin9");
+  --card-sticker: url("/static/themes/stickers/milk-card-sticker.png?v=skin9");
+  --bottom-sticker: url("/static/themes/stickers/milk-bottom-sticker.png?v=skin9");
+}
+
+html[data-theme="night"] {
+  --hero-left-sticker: url("/static/themes/stickers/night-left-sticker.png?v=skin9");
+  --hero-right-sticker: url("/static/themes/stickers/night-right-sticker.png?v=skin9");
+  --card-sticker: url("/static/themes/stickers/night-card-sticker.png?v=skin9");
+  --bottom-sticker: url("/static/themes/templates/night-bottom.png?v=skin9");
+}
+
+html[data-theme="blue"] {
+  --hero-left-sticker: url("/static/themes/stickers/blue-left-sticker.png?v=skin9");
+  --hero-right-sticker: url("/static/themes/stickers/blue-right-sticker.png?v=skin9");
+  --card-sticker: url("/static/themes/stickers/blue-card-sticker.png?v=skin9");
+  --bottom-sticker: url("/static/themes/templates/blue-bottom.png?v=skin9");
+}
+
+html[data-theme="berry"] {
+  --hero-left-sticker: url("/static/themes/stickers/berry-left-sticker.png?v=skin9");
+  --hero-right-sticker: url("/static/themes/stickers/berry-right-sticker.png?v=skin9");
+  --card-sticker: url("/static/themes/stickers/berry-card-sticker.png?v=skin9");
+  --bottom-sticker: url("/static/themes/stickers/berry-bottom-sticker.png?v=skin9");
+}
+
+.hero::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 11px !important;
+  top: 30px !important;
+  width: 116px !important;
+  height: 154px !important;
+  background: var(--hero-left-sticker) center / contain no-repeat !important;
+  opacity: .98 !important;
+  filter: drop-shadow(0 12px 16px rgba(190, 83, 125, .18));
+  z-index: 1;
+}
+
+.hero::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  right: 11px !important;
+  top: 30px !important;
+  width: 116px !important;
+  height: 154px !important;
+  background: var(--hero-right-sticker) center / contain no-repeat !important;
+  opacity: .98 !important;
+  filter: drop-shadow(0 12px 16px rgba(190, 83, 125, .16));
+  z-index: 1;
+}
+
+.hero-title,
+.hero-date,
+.theme-label {
+  z-index: 2 !important;
+}
+
+.mini-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.mini-card::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  width: 76px;
+  height: 92px;
+  background: var(--card-sticker) center / contain no-repeat;
+  opacity: .58;
+  pointer-events: none;
+}
+
+.mini-card.analysis::after {
+  width: 72px;
+  height: 88px;
+  opacity: .38;
+  transform: rotate(4deg);
+}
+
+.input-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.input-card::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 46px;
+  height: 56px;
+  background: var(--card-sticker) center / contain no-repeat;
+  opacity: .22;
+  pointer-events: none;
+}
+
+.history::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 6px !important;
+  bottom: 3px !important;
+  width: 94px !important;
+  height: 110px !important;
+  background: var(--bottom-sticker) center / contain no-repeat !important;
+  opacity: .22 !important;
+  font-size: 0 !important;
+  pointer-events: none !important;
+}
+
+html[data-theme="night"] .hero::before,
+html[data-theme="night"] .hero::after {
+  filter: drop-shadow(0 0 18px rgba(216, 130, 255, .36));
+}
+
+html[data-theme="night"] .mini-card::after,
+html[data-theme="night"] .input-card::after,
+html[data-theme="night"] .history::after {
+  opacity: .30 !important;
 }
 
 @media (max-width: 380px) {
