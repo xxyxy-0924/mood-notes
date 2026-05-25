@@ -1,8 +1,8 @@
 {
-  "name": "小蜥蜴",
+  "name": "小蜥蜴日常",
   "short_name": "小蜥蜴",
-  "description": "每天记录心情、收到抱抱和回应的小空间。",
-  "start_url": "/?source=pwa&v=photo6",
+  "description": "每天记录心情、天气和打卡日期的小空间。",
+  "start_url": "/?source=pwa&v=blue1",
   "scope": "/",
   "display": "fullscreen",
   "display_override": [
@@ -10,8 +10,8 @@
     "standalone"
   ],
   "orientation": "portrait",
-  "background_color": "#fff4f8",
-  "theme_color": "#e878ad",
+  "background_color": "#dff4ff",
+  "theme_color": "#4faee8",
   "categories": [
     "lifestyle",
     "productivity"

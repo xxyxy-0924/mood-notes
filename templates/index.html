@@ -3,68 +3,240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#fff4f8">
+<meta name="theme-color" content="#dff4ff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="小蜥蜴">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="/manifest.webmanifest?v=photo6">
+<link rel="manifest" href="/manifest.webmanifest?v=blue1">
 <link rel="icon" href="/static/app-icon-192.png?v=photo6" type="image/png">
 <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png?v=photo6">
-<title>小蜥蜴</title>
+<title>小蜥蜴日常</title>
 <style>
-:root{--bg:#fff3f8;--ink:#4c3142;--muted:#a68191;--card:rgba(255,255,255,.74);--line:rgba(223,117,157,.18);--accent:#ef5f98;--accent2:#ffb9d2;--soft:#fff1f6;--deep:#d94682;--shadow:0 14px 34px rgba(190,89,125,.18);--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--hero:linear-gradient(180deg,#ffeaf3 0%,#fff7fa 100%);--card-bg:rgba(255,255,255,.76);--field:rgba(255,250,252,.78);--decor1:'🌸';--decor2:'🦎';--decor3:'♡'}
-[data-theme="night"]{--bg:#13091f;--ink:#f5eaff;--muted:#bfa5d4;--card:rgba(31,17,48,.72);--line:rgba(205,148,255,.3);--accent:#d990ff;--accent2:#ff74c6;--soft:rgba(147,75,215,.2);--deep:#f0d9ff;--shadow:0 14px 36px rgba(0,0,0,.38);--hero:linear-gradient(180deg,#24113d 0%,#12091f 100%);--card-bg:rgba(35,20,54,.76);--field:rgba(255,255,255,.06);--decor1:'✦';--decor2:'🦇';--decor3:'☾'}
-[data-theme="blue"]{--bg:#eef9ff;--ink:#31506a;--muted:#7893a7;--card:rgba(255,255,255,.72);--line:rgba(85,156,207,.18);--accent:#4da0df;--accent2:#b9e6ff;--soft:#eef9ff;--deep:#2e86c2;--shadow:0 14px 34px rgba(77,142,185,.16);--hero:linear-gradient(180deg,#dcf4ff 0%,#fffdf0 100%);--card-bg:rgba(255,255,252,.74);--field:rgba(255,255,255,.7);--decor1:'☁️';--decor2:'🌈';--decor3:'☆'}
-[data-theme="berry"]{--bg:#fff0f2;--ink:#613742;--muted:#a37a84;--card:rgba(255,252,247,.76);--line:rgba(231,91,124,.2);--accent:#ef547d;--accent2:#ffc3cb;--soft:#fff0f2;--deep:#df426d;--shadow:0 14px 34px rgba(190,83,99,.16);--hero:linear-gradient(180deg,#ffe0e5 0%,#fff8f1 100%);--card-bg:rgba(255,252,247,.78);--field:rgba(255,255,255,.72);--decor1:'🍓';--decor2:'🎀';--decor3:'♡'}
-*{box-sizing:border-box;margin:0;padding:0}html{background:var(--bg)}body{min-height:100vh;min-height:100dvh;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;z-index:-3;background:var(--hero)}body:after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.62;background-image:radial-gradient(circle at 12% 22%,var(--accent2) 0 8px,transparent 9px),radial-gradient(circle at 85% 18%,rgba(255,255,255,.72) 0 38px,transparent 39px),radial-gradient(circle at 80% 72%,rgba(255,255,255,.48) 0 58px,transparent 59px),linear-gradient(135deg,transparent 0 47%,rgba(255,255,255,.16) 48% 50%,transparent 51%);background-size:180px 180px,220px 220px,260px 260px,34px 34px;background-position:0 90px,210px 64px,180px 520px,0 0}.app{width:min(430px,100%);margin:0 auto;padding:calc(10px + var(--safe-top)) 13px calc(82px + var(--safe-bottom));position:relative}.app:before{content:var(--decor1) ' ' var(--decor3) ' ' var(--decor2);position:absolute;top:112px;right:18px;font-size:28px;letter-spacing:10px;color:var(--accent);opacity:.8;filter:drop-shadow(0 10px 18px var(--accent2))}.app:after{content:"";position:fixed;left:50%;bottom:0;width:min(430px,100%);height:170px;transform:translateX(-50%);pointer-events:none;z-index:-1;background:radial-gradient(circle at 20% 70%,rgba(255,255,255,.7),transparent 32%),radial-gradient(circle at 72% 78%,var(--accent2),transparent 24%);opacity:.55}button,input,textarea{font:inherit}button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;color:inherit}.status{height:30px;display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:15px;padding:0 8px}.status-icons{display:flex;align-items:center;gap:6px}.battery{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:18px;padding:0 4px;border-radius:6px;background:#24c75a;color:#fff;font-size:12px}.nav{height:54px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center}.nav h1{text-align:center;font-size:22px;letter-spacing:.08em;color:var(--ink)}.nav-btn{height:42px;background:transparent;font-size:30px;color:var(--ink)}.hero{height:192px;border-radius:0 0 28px 28px;margin:0 -13px 12px;padding:22px 22px 0;text-align:center;position:relative;overflow:hidden;background:var(--hero);box-shadow:0 10px 26px rgba(0,0,0,.04)}.hero:before{content:var(--decor2);position:absolute;left:44px;top:54px;font-size:60px;opacity:.9;filter:drop-shadow(0 14px 18px var(--accent2))}.hero:after{content:var(--decor1);position:absolute;right:36px;top:44px;font-size:78px;opacity:.18}.hero-title{position:relative;z-index:1;margin-top:44px;font-size:26px;font-weight:900;letter-spacing:.14em;color:var(--deep)}.hero-date{position:relative;z-index:1;margin-top:5px;font-size:13px;color:var(--muted);letter-spacing:.18em}.theme-label{margin-top:4px;font-size:11px;color:var(--muted)}.quote{margin:-22px 4px 12px;padding:17px 18px;border-radius:24px;background:var(--card-bg);border:1px solid rgba(255,255,255,.62);box-shadow:var(--shadow);position:relative;z-index:2;text-align:center;font-size:17px;color:var(--ink);backdrop-filter:blur(16px)}.themes{display:flex;gap:9px;justify-content:center;margin:0 4px 12px}.theme-chip{min-width:72px;padding:8px 12px;border-radius:999px;background:var(--card-bg);border:1px solid var(--line);color:var(--accent);font-size:13px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.05)}.theme-chip.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.card{background:var(--card-bg);border:1px solid rgba(255,255,255,.58);border-radius:20px;box-shadow:var(--shadow);backdrop-filter:blur(18px)}.mini-card{min-height:148px;padding:14px}.card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;color:var(--deep);font-size:14px;font-weight:900}.mini-btn{padding:6px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.38);color:var(--accent);font-size:11px;font-weight:800;white-space:nowrap}.weather-row{display:flex;align-items:center;gap:10px}.weather-icon{font-size:44px}.temp{font-size:36px;line-height:1;color:var(--accent);font-weight:700}.weather-city{font-size:12px;font-weight:850}.weather-meta{margin-top:8px;color:var(--muted);font-size:11px;display:flex;gap:8px;flex-wrap:wrap}.tip{margin-top:10px;padding:8px 10px;border-radius:14px;background:var(--soft);color:var(--ink);font-size:12px}.analysis strong{display:block;color:var(--accent);font-size:13px;margin-bottom:6px}.analysis span{font-size:12px;color:var(--ink)}.panel{padding:14px;margin-bottom:10px}.label{font-size:15px;font-weight:900;color:var(--deep);margin-bottom:10px}.notice{display:none;margin-bottom:10px;border-radius:16px;background:var(--soft);padding:10px 12px;color:var(--deep);font-size:13px}.notice.show{display:block}.mood-grid{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}.mood-grid::-webkit-scrollbar{display:none}.mood-btn{flex:0 0 42px;width:42px;height:42px;border-radius:16px;background:rgba(255,255,255,.7);border:1px solid var(--line);display:grid;place-items:center;font-size:24px;box-shadow:0 6px 14px rgba(0,0,0,.04)}.mood-btn.selected{background:var(--soft);border-color:var(--accent);box-shadow:0 0 0 3px rgba(239,95,152,.15);transform:translateY(-1px)}.input-card{padding:14px;margin-bottom:10px}.textarea-wrap{position:relative}.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:16px;background:var(--field);outline:none;color:var(--ink);padding:12px 13px;font-size:14px}.field textarea{min-height:84px;resize:vertical}.counter{text-align:right;color:var(--muted);font-size:11px;margin-top:5px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}.submit-btn{display:block;width:68%;min-width:210px;margin:6px auto 0;padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:15px;font-weight:900;box-shadow:0 12px 26px rgba(239,95,152,.26)}.submit-btn:disabled{opacity:.65}.history{padding:14px;margin-bottom:12px}.history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.history-head h2{font-size:16px;color:var(--deep)}.history-actions{display:flex;gap:6px}.refresh-btn,.filter{height:30px;padding:0 10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.5);color:var(--accent);font-size:12px;font-weight:800}.filters{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}.filter.active{background:var(--accent);color:#fff}.stats{display:flex;gap:8px;margin-bottom:10px}.stat{flex:1;border-radius:16px;background:var(--soft);padding:9px 10px;color:var(--deep)}.stat strong{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}.note{padding:12px;border-radius:18px;background:rgba(255,255,255,.56);border:1px solid var(--line);margin-bottom:10px}.note-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}.mood-tags,.tag-row,.reaction-row{display:flex;gap:6px;flex-wrap:wrap}.mood-tag,.tag{border-radius:999px;background:var(--soft);color:var(--accent);padding:3px 8px;font-size:11px;font-weight:800}.time,.meta{font-size:11px;color:var(--muted)}.note-text{font-size:14px;white-space:pre-wrap;word-break:break-word;margin-top:4px}.tag-row{margin-top:8px}.reaction-row{border-top:1px dashed var(--line);padding-top:9px;margin-top:10px}.reaction-btn{flex:1 1 calc(33.333% - 6px);min-height:34px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:800;border:1px solid var(--line)}.delete-btn{display:block;background:transparent;color:var(--muted);font-size:12px;margin:8px 0 0 auto}.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13px}.fab{position:fixed;left:50%;bottom:calc(18px + var(--safe-bottom));transform:translateX(-50%);width:64px;height:64px;border-radius:50%;z-index:10;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:38px;line-height:1;box-shadow:0 14px 34px rgba(239,95,152,.42),0 0 0 7px rgba(255,255,255,.65)}.toast,.loading,.login-overlay,.splash{position:fixed;z-index:20}.toast{left:50%;bottom:calc(94px + var(--safe-bottom));transform:translateX(-50%) translateY(18px);max-width:calc(100vw - 28px);background:rgba(48,40,58,.94);color:#fff;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s ease;font-size:13px;text-align:center}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.loading{inset:0;display:none;place-items:center;background:rgba(255,244,248,.72);backdrop-filter:blur(8px);color:var(--muted)}.loading.show{display:grid}.login-overlay{inset:0;display:none;align-items:center;justify-content:center;background:var(--bg);padding:20px}.login-overlay.show{display:flex}.login-card{width:min(340px,100%);padding:26px;text-align:center}.login-card .icon{font-size:44px}.login-card h2{margin:8px 0}.login-card p{color:var(--muted);font-size:13px;margin-bottom:14px}.login-card input{text-align:center;letter-spacing:3px;margin-bottom:10px}.splash{inset:0;display:grid;place-items:center;background:var(--bg);transition:.35s ease}.splash.hide{opacity:0;visibility:hidden}.splash-card{text-align:center}.splash-card img{width:118px;height:118px;border-radius:28px;box-shadow:var(--shadow)}.splash-card strong{display:block;margin-top:14px;font-size:21px}.splash-card span{display:block;color:var(--muted);font-size:13px}@media(max-width:380px){.app{padding-left:10px;padding-right:10px}.theme-chip{min-width:66px;padding-left:9px;padding-right:9px}.mini-card{padding:12px}.temp{font-size:32px}.weather-icon{font-size:38px}.submit-btn{width:78%}.hero-title{font-size:24px}.mood-btn{flex-basis:40px;width:40px;height:40px}.form-grid{grid-template-columns:1fr}}
-
-/* photo4 visual pass: remove fake status bar and make themes read as full skins */
-.status,.status-icons,.battery{display:none!important}.app{padding-top:calc(4px + var(--safe-top));background:linear-gradient(180deg,rgba(255,255,255,.08),transparent 220px)}
-.nav{height:62px;margin:0 -2px 4px}.nav h1{font-size:22px;font-weight:900;letter-spacing:.12em}.nav-btn{font-size:36px;font-weight:300}.nav-btn:last-child{font-size:28px;letter-spacing:3px}
-.hero{height:238px;margin:0 -13px 12px;border-radius:0 0 34px 34px;padding-top:64px;border-bottom:1px solid rgba(255,255,255,.55);box-shadow:none;background:var(--scene)}
-.hero-title{margin-top:0;font-size:30px;letter-spacing:.12em;text-shadow:0 4px 16px rgba(255,255,255,.45)}.hero-date{font-size:14px;letter-spacing:.2em}.theme-label{font-size:13px;margin-top:9px;color:var(--muted)}
-.hero:before{left:28px;top:82px;font-size:82px;opacity:.92}.hero:after{right:22px;top:56px;font-size:118px;opacity:.22}.app:before{display:none}.quote{margin:-34px 5px 14px;padding:18px 18px;border-radius:28px;font-size:18px;background:rgba(255,255,255,.82)}
-.themes{gap:10px;margin-bottom:14px}.theme-chip{min-width:76px;height:42px;font-size:14px;border-radius:999px;background:rgba(255,255,255,.72);box-shadow:0 8px 18px rgba(151,84,111,.12)}
-.card{border-radius:24px;background:rgba(255,255,255,.78);box-shadow:0 16px 34px rgba(185,98,130,.13)}.mini-card{min-height:168px;padding:16px}.card-title{font-size:15px}.weather-icon{font-size:52px}.temp{font-size:42px;font-weight:800}.panel,.input-card,.history{padding:18px}.mood-btn{width:50px;height:50px;flex-basis:50px;border-radius:18px;font-size:28px;background:rgba(255,255,255,.82)}.label{font-size:17px}.fab{width:72px;height:72px;font-size:44px;bottom:calc(20px + var(--safe-bottom))}
-:root{--scene:linear-gradient(180deg,#ffe4ef 0%,#fff6fb 64%,rgba(255,255,255,.65) 100%);--decor1:'\1F338';--decor2:'\1F98E';--decor3:'\2661'}
-html[data-theme="night"] body:before{background:radial-gradient(circle at 78% 6%,rgba(214,119,255,.26),transparent 24%),linear-gradient(180deg,#170722 0%,#24103f 48%,#11071e 100%)}html[data-theme="night"] .hero{background:radial-gradient(circle at 22% 28%,rgba(255,136,212,.26),transparent 24%),radial-gradient(circle at 84% 22%,rgba(154,100,255,.28),transparent 28%),linear-gradient(180deg,#24113d 0%,#13091f 100%)}html[data-theme="night"] .card,html[data-theme="night"] .quote{background:rgba(30,17,48,.82);border-color:rgba(216,154,255,.28)}html[data-theme="night"] .theme-chip{background:rgba(42,21,63,.76)}
-html[data-theme="blue"] body:before{background:radial-gradient(circle at 18% 18%,rgba(255,255,255,.82),transparent 22%),linear-gradient(180deg,#d9f3ff 0%,#f4fbff 54%,#fffdf1 100%)}html[data-theme="blue"] .hero{background:radial-gradient(circle at 18% 36%,rgba(255,255,255,.86),transparent 26%),radial-gradient(circle at 86% 20%,rgba(150,218,255,.52),transparent 30%),linear-gradient(180deg,#dff5ff 0%,#fffcef 100%)}
-html[data-theme="berry"] body:before{background:linear-gradient(0deg,rgba(255,255,255,.36),rgba(255,255,255,.36)),repeating-linear-gradient(90deg,rgba(255,126,145,.12) 0 16px,transparent 16px 32px),linear-gradient(180deg,#ffe4e9 0%,#fff8f1 100%)}html[data-theme="berry"] .hero{background:radial-gradient(circle at 18% 22%,rgba(255,255,255,.72),transparent 23%),radial-gradient(circle at 84% 24%,rgba(255,120,145,.28),transparent 30%),linear-gradient(180deg,#ffe0e6 0%,#fff7f0 100%)}
-@media(max-width:380px){.hero{height:220px}.hero-title{font-size:27px}.mini-grid{gap:8px}.mood-btn{width:46px;height:46px;flex-basis:46px}}
-
+:root{
+  --bg:#dff4ff;
+  --bg2:#f4fbff;
+  --ink:#24465f;
+  --muted:#7da0b8;
+  --card:#ffffffd9;
+  --line:#c9e5f4;
+  --blue:#4faee8;
+  --blue2:#9cdbff;
+  --deep:#237fbd;
+  --soft:#eaf7ff;
+  --shadow:0 18px 42px rgba(52,132,181,.18);
+  --safe-top:env(safe-area-inset-top);
+  --safe-bottom:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{min-height:100vh;min-height:100dvh;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:linear-gradient(180deg,#d8f2ff 0%,#f7fcff 48%,#e7f7ff 100%);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 16% 10%,rgba(255,255,255,.78) 0 42px,transparent 43px),radial-gradient(circle at 88% 17%,rgba(255,255,255,.72) 0 58px,transparent 59px),radial-gradient(circle at 18% 88%,rgba(151,218,255,.42),transparent 28%),linear-gradient(90deg,rgba(255,255,255,.24) 1px,transparent 1px),linear-gradient(0deg,rgba(255,255,255,.24) 1px,transparent 1px);background-size:auto,auto,auto,28px 28px,28px 28px}
+button,input,textarea{font:inherit;color:inherit}
+button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.app{width:min(430px,100%);margin:0 auto;padding:calc(8px + var(--safe-top)) 14px calc(88px + var(--safe-bottom))}
+.nav{height:54px;display:grid;grid-template-columns:44px 1fr 44px;align-items:center}
+.nav h1{text-align:center;font-size:22px;font-weight:900;letter-spacing:.08em;color:#1f597e}
+.nav-btn{height:44px;background:transparent;font-size:34px;color:#315a72}
+.nav-btn:last-child{font-size:28px;letter-spacing:4px}
+.hero{position:relative;overflow:hidden;border-radius:30px;margin:4px 0 12px;padding:28px 20px 24px;min-height:188px;text-align:center;background:linear-gradient(180deg,#eefaff 0%,#ffffff 100%);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.82)}
+.hero:before{content:"";position:absolute;left:-30px;top:-22px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#b9e9ff 0 34%,transparent 35%),radial-gradient(circle at 72% 30%,#ffffff 0 22%,transparent 23%);opacity:.55}
+.hero:after{content:"🦎";position:absolute;right:22px;bottom:24px;font-size:58px;filter:drop-shadow(0 10px 16px rgba(51,139,100,.16))}
+.hero-icon{font-size:42px;margin-bottom:2px}
+.hero-title{font-size:31px;font-weight:900;letter-spacing:.12em;color:var(--deep)}
+.hero-date{margin-top:5px;color:#7199b4;font-weight:700;letter-spacing:.14em}
+.quote{margin:0 4px 12px;padding:16px 18px;border-radius:24px;background:rgba(255,255,255,.9);border:1px solid var(--line);box-shadow:0 10px 24px rgba(68,141,184,.12);text-align:center;font-size:17px;color:#376177}
+.dashboard{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.card{border-radius:24px;background:var(--card);border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow);backdrop-filter:blur(16px)}
+.mini-card{min-height:156px;padding:15px}
+.card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:15px;font-weight:900;color:var(--deep)}
+.mini-btn{height:32px;padding:0 12px;border-radius:999px;background:#f8fcff;border:1px solid var(--line);color:var(--deep);font-size:12px;font-weight:800}
+.weather-main{display:flex;align-items:center;gap:12px}
+.weather-icon{font-size:48px}
+.temp{font-size:42px;line-height:1;font-weight:900;color:#3aa5e5}
+.weather-city{font-size:12px;font-weight:900;color:#315a72}
+.weather-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:11px}
+.tip{margin-top:10px;padding:9px 10px;border-radius:15px;background:var(--soft);color:#3d657b;font-size:12px}
+.analysis strong{display:block;color:#308fd0;font-size:14px;line-height:1.45;margin-bottom:8px}
+.analysis span{display:block;font-size:12px;color:#466c82}
+.checkin{padding:16px;margin-bottom:12px}
+.check-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.check-title{font-size:17px;font-weight:900;color:var(--deep)}
+.check-stats{display:flex;gap:8px}
+.check-pill{min-width:64px;text-align:center;border-radius:16px;background:var(--soft);padding:8px 10px}
+.check-pill strong{display:block;color:var(--deep);font-size:20px;line-height:1}
+.check-pill span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.calendar-title{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px 0 9px;color:#416a80;font-weight:900}
+.month-btn{width:32px;height:32px;border-radius:50%;background:#f7fcff;border:1px solid var(--line);color:var(--deep);font-weight:900}
+.week-row,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.week-row{margin-bottom:5px;color:#86a7ba;font-size:11px;text-align:center;font-weight:800}
+.day{min-height:42px;border-radius:14px;background:rgba(234,247,255,.72);border:1px solid transparent;padding:4px 2px;text-align:center;position:relative}
+.day.blank{background:transparent}
+.day.today{border-color:#64bdec;background:#f7fcff}
+.day-num{display:block;font-size:11px;color:#6f91a5;font-weight:800}
+.day-moods{font-size:16px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.panel,.input-card,.history{padding:16px;margin-bottom:12px}
+.label{font-size:17px;font-weight:900;color:var(--deep);margin-bottom:12px}
+.notice{display:none;margin-bottom:12px;border-radius:18px;background:#eaf7ff;padding:11px 12px;color:#2e719c;font-size:13px}
+.notice.show{display:block}
+.mood-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.mood-btn{aspect-ratio:1;border-radius:18px;background:#f9fdff;border:1px solid var(--line);display:grid;place-items:center;font-size:25px;box-shadow:0 8px 18px rgba(60,139,184,.09)}
+.mood-btn.selected{background:linear-gradient(180deg,#dff4ff,#fff);border-color:#46aee8;box-shadow:0 0 0 3px rgba(79,174,232,.18);transform:translateY(-1px)}
+.selected-strip{display:none;margin:10px 0 0;color:#4f7991;font-size:13px}
+.selected-strip.show{display:block}
+.field input,.field textarea{width:100%;border:1px solid var(--line);border-radius:18px;background:#fbfeff;outline:none;padding:12px 13px;font-size:14px}
+.field textarea{min-height:112px;resize:vertical}
+.counter{text-align:right;color:var(--muted);font-size:11px;margin-top:5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}
+.submit-btn{display:block;width:74%;min-width:220px;margin:8px auto 0;padding:13px 16px;border-radius:999px;background:linear-gradient(135deg,#45aee9,#9fddff);color:#fff;font-size:15px;font-weight:900;box-shadow:0 14px 26px rgba(61,160,220,.28)}
+.submit-btn:disabled{opacity:.65}
+.history-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.history-head h2{font-size:17px;color:var(--deep)}
+.history-actions{display:flex;gap:6px}
+.refresh-btn,.filter{min-height:32px;padding:0 10px;border-radius:13px;border:1px solid var(--line);background:#f8fcff;color:var(--deep);font-size:12px;font-weight:800}
+.filters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.filter{height:42px;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden}
+.filter.active{background:linear-gradient(135deg,#45aee9,#9fddff);color:#fff;border-color:transparent}
+.stats{display:flex;gap:8px;margin-bottom:10px}
+.stat{flex:1;border-radius:18px;background:var(--soft);padding:10px;color:var(--deep)}
+.stat strong{display:block;font-size:22px;line-height:1.1}
+.stat span{font-size:11px;color:var(--muted)}
+.note{padding:12px;border-radius:18px;background:#fbfeff;border:1px solid var(--line);margin-bottom:10px}
+.note-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mood-tags,.tag-row,.reaction-row{display:flex;gap:6px;flex-wrap:wrap}
+.mood-tag,.tag{border-radius:999px;background:var(--soft);color:var(--deep);padding:3px 8px;font-size:11px;font-weight:800}
+.time,.meta{font-size:11px;color:var(--muted)}
+.note-text{font-size:14px;white-space:pre-wrap;word-break:break-word;margin-top:4px}
+.tag-row{margin-top:8px}
+.reaction-row{border-top:1px dashed var(--line);padding-top:9px;margin-top:10px}
+.reaction-btn{flex:1 1 calc(33.333% - 6px);min-height:34px;border-radius:999px;background:var(--soft);color:var(--deep);font-size:12px;font-weight:800;border:1px solid var(--line)}
+.delete-btn{display:block;background:transparent;color:var(--muted);font-size:12px;margin:8px 0 0 auto}
+.empty{text-align:center;color:var(--muted);padding:26px 10px;font-size:13px}
+.fab{position:fixed;left:50%;bottom:calc(18px + var(--safe-bottom));transform:translateX(-50%);width:68px;height:68px;border-radius:50%;z-index:10;background:linear-gradient(135deg,#45aee9,#9fddff);color:#fff;font-size:42px;line-height:1;box-shadow:0 14px 34px rgba(61,160,220,.36),0 0 0 7px rgba(255,255,255,.78)}
+.toast,.loading,.login-overlay,.splash{position:fixed;z-index:20}
+.toast{left:50%;bottom:calc(94px + var(--safe-bottom));transform:translateX(-50%) translateY(18px);max-width:calc(100vw - 28px);background:rgba(30,67,90,.94);color:#fff;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s ease;font-size:13px;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.loading{inset:0;display:none;place-items:center;background:rgba(223,244,255,.72);backdrop-filter:blur(8px);color:#557d94}
+.loading.show{display:grid}
+.login-overlay{inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,#dff4ff,#f7fcff);padding:20px}
+.login-overlay.show{display:flex}
+.login-card{width:min(340px,100%);padding:26px;text-align:center}
+.login-card .icon{font-size:44px}
+.login-card h2{margin:8px 0}
+.login-card p{color:var(--muted);font-size:13px;margin-bottom:14px}
+.login-card input{text-align:center;letter-spacing:3px;margin-bottom:10px}
+.splash{inset:0;display:grid;place-items:center;background:linear-gradient(180deg,#dff4ff,#f7fcff);transition:.35s ease}
+.splash.hide{opacity:0;visibility:hidden}
+.splash-card{text-align:center}
+.splash-card img{width:112px;height:112px;border-radius:26px;box-shadow:var(--shadow)}
+.splash-card strong{display:block;margin-top:14px;font-size:21px}
+.splash-card span{display:block;color:var(--muted);font-size:13px}
+@media(max-width:380px){
+  .app{padding-left:10px;padding-right:10px}
+  .dashboard{gap:8px}
+  .mini-card{padding:13px}
+  .temp{font-size:36px}
+  .weather-icon{font-size:42px}
+  .mood-grid{grid-template-columns:repeat(5,1fr)}
+  .filters{grid-template-columns:repeat(3,1fr)}
+  .form-grid{grid-template-columns:1fr}
+}
 </style>
-<link rel="stylesheet" href="/static/theme-polish.css?v=skin9">
 </head>
 <body>
-<div class="splash" id="splash"><div class="splash-card"><img src="/static/apple-touch-icon.png?v=photo6" alt="小蜥蜴日常"><strong>小蜥蜴日常</strong><span>今天也会认真听你说</span></div></div>
-<div class="login-overlay" id="loginOverlay"><div class="login-card card"><div class="icon">🔐</div><h2>请输入密码</h2><p>这是我们的小小心情空间</p><label class="field"><input type="password" id="passwordInput" placeholder="密码" maxlength="40" autocomplete="off"></label><button class="submit-btn" onclick="doLogin()">进入</button></div></div>
-<div class="loading" id="loading">正在加载心情记录...</div><div class="toast" id="toast"></div>
+<div class="splash" id="splash">
+  <div class="splash-card"><img src="/static/apple-touch-icon.png?v=photo6" alt="小蜥蜴"><strong>小蜥蜴日常</strong><span>今天也会认真听你说</span></div>
+</div>
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card card">
+    <div class="icon">🔐</div>
+    <h2>请输入密码</h2>
+    <p>这是我们的小小心情空间</p>
+    <label class="field"><input type="password" id="passwordInput" placeholder="密码" maxlength="40" autocomplete="current-password"></label>
+    <button class="submit-btn" onclick="doLogin()">进入</button>
+  </div>
+</div>
+<div class="loading" id="loading">正在加载心情记录...</div>
+<div class="toast" id="toast"></div>
 <main class="app">
-  <nav class="nav"><button class="nav-btn" type="button" aria-label="关闭">×</button><h1>小蜥蜴日常</h1><button class="nav-btn" type="button" aria-label="更多">···</button></nav>
-  <header class="hero"><div class="hero-title">小蜥蜴日常</div><div class="hero-date" id="todayDate">2026-05-25　周一</div><div class="theme-label">主题切换</div></header>
+  <nav class="nav">
+    <button class="nav-btn" type="button" aria-label="关闭">×</button>
+    <h1>小蜥蜴日常</h1>
+    <button class="nav-btn" type="button" aria-label="更多">···</button>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-icon">☁️</div>
+    <div class="hero-title">小蜥蜴日常</div>
+    <div class="hero-date" id="todayDate">2026-05-25 周一</div>
+  </header>
   <div class="quote">“ 心存温柔，山河浪漫。 ”</div>
-  <div class="themes" id="themeSwitch"></div>
-  <section class="mini-grid">
-    <div class="card mini-card"><div class="card-title"><span>☼ 今日天气</span></div><div class="weather-row"><div class="weather-icon" id="weatherIcon">☁️</div><div><div class="temp"><span id="weatherTemp">--</span>°C</div><div class="weather-city" id="weatherCity">厦门海沧</div></div></div><div class="weather-meta"><span id="weatherText">加载中</span><span id="weatherHumidity">湿度 --</span><span id="weatherWind">风力 --</span></div><div class="tip" id="weatherTip">正在看看今天适合怎么照顾自己...</div></div>
-    <div class="card mini-card analysis"><div class="card-title"><span>♡ 智能分析提醒</span><button class="mini-btn" onclick="loadAnalysis()">更新</button></div><strong id="analysisSummary">正在整理最近的心情...</strong><span id="analysisSuggestion">小蜥蜴会根据你的最近记录生成提醒。</span><div class="tip" id="weatherRange">-- / --</div></div>
+
+  <section class="dashboard">
+    <div class="card mini-card">
+      <div class="card-title"><span>☼ 今日天气</span><button class="mini-btn" onclick="useCurrentLocation()">定位</button></div>
+      <div class="weather-main"><div class="weather-icon" id="weatherIcon">☁️</div><div><div class="temp"><span id="weatherTemp">--</span>°C</div><div class="weather-city" id="weatherCity">厦门海沧</div></div></div>
+      <div class="weather-meta"><span id="weatherText">加载中</span><span id="weatherHumidity">湿度 --</span><span id="weatherWind">风力 --</span></div>
+      <div class="tip" id="weatherTip">正在看看今天适合怎么照顾自己...</div>
+    </div>
+    <div class="card mini-card analysis">
+      <div class="card-title"><span>♡ 智能提醒</span><button class="mini-btn" onclick="loadAnalysis()">更新</button></div>
+      <strong id="analysisSummary">正在整理最近的心情...</strong>
+      <span id="analysisSuggestion">小蜥蜴会根据你的最近记录生成提醒。</span>
+      <div class="tip" id="weatherRange">-- / --</div>
+    </div>
   </section>
-  <section class="card panel"><div class="notice" id="notice"><span id="noticeText"></span></div><div class="label">✨ 今日心情</div><div class="mood-grid" id="moodGrid"></div></section>
-  <section class="card input-card"><div class="label">记录此刻的想法...</div><label class="field textarea-wrap"><textarea id="noteText" maxlength="500" placeholder="写下你的心情、想法和小日常..."></textarea></label><div class="counter" id="counter">0/500</div><div class="form-grid"><label class="field"><input id="senderInput" maxlength="20" placeholder="发送给（可选）"></label><label class="field"><input id="tagsInput" maxlength="120" placeholder="标签（可选）"></label></div><button class="submit-btn" id="submitBtn" onclick="submitMood()">提交心情日记 ♡</button></section>
-  <section class="card history"><div class="history-head"><h2>▦ 历史记录</h2><div class="history-actions"><button class="refresh-btn" onclick="refreshNotes()">刷新</button></div></div><div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>条心情记录</span></div><div class="stat"><strong id="latestTime">暂无</strong><span>最近更新</span></div></div><div class="filters" id="filters"></div><div class="history-list" id="historyList"></div></section>
+
+  <section class="card checkin">
+    <div class="check-head">
+      <div class="check-title">🗓️ 打卡日期</div>
+      <div class="check-stats">
+        <div class="check-pill"><strong id="streakCount">0</strong><span>连续</span></div>
+        <div class="check-pill"><strong id="monthCount">0</strong><span>本月</span></div>
+      </div>
+    </div>
+    <div class="calendar-title"><button class="month-btn" id="prevMonth">‹</button><span id="calendarTitle">2026年05月</span><button class="month-btn" id="nextMonth">›</button></div>
+    <div class="week-row"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </section>
+
+  <section class="card panel">
+    <div class="notice" id="notice"><span id="noticeText"></span></div>
+    <div class="label">✨ 今日心情</div>
+    <div class="mood-grid" id="moodGrid"></div>
+    <div class="selected-strip" id="selectedStrip"></div>
+  </section>
+
+  <section class="card input-card">
+    <div class="label">记录此刻的想法...</div>
+    <label class="field"><textarea id="noteText" maxlength="500" placeholder="写下你的心情、想法和小日常..."></textarea></label>
+    <div class="counter" id="counter">0/500</div>
+    <div class="form-grid">
+      <label class="field"><input id="senderInput" maxlength="20" placeholder="发送给（可选）"></label>
+      <label class="field"><input id="tagsInput" maxlength="120" placeholder="标签（可选）"></label>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitMood()">提交心情日记 ♡</button>
+  </section>
+
+  <section class="card history">
+    <div class="history-head"><h2>▦ 历史记录</h2><div class="history-actions"><button class="refresh-btn" onclick="refreshNotes()">刷新</button></div></div>
+    <div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>条心情记录</span></div><div class="stat"><strong id="latestTime">暂无</strong><span>最近更新</span></div></div>
+    <div class="filters" id="filters"></div>
+    <div class="history-list" id="historyList"></div>
+  </section>
 </main>
 <button class="fab" type="button" onclick="noteText.focus()">+</button>
 <script>
 const NEEDS_PASSWORD = {{ needs_password | tojson }};
-const TEXT_MOODS=[{name:'开心',emoji:'😊'},{name:'难过',emoji:'😢'},{name:'生气',emoji:'😠'},{name:'委屈',emoji:'🥺'},{name:'想你',emoji:'💕'},{name:'需要安慰',emoji:'🤗'},{name:'想一个人静静',emoji:'🌙'}];
+const TEXT_MOODS=[{name:'开心',emoji:'😊'},{name:'难过',emoji:'😢'},{name:'生气',emoji:'😡'},{name:'委屈',emoji:'🥺'},{name:'想你',emoji:'💕'},{name:'需要安慰',emoji:'🤗'},{name:'想一个人静静',emoji:'🌙'}];
 const EMOJI_MOODS=['😋','🥲','🥹','🧐','🤓','😜','😝','😞','😟','😣','😖','☹️','😓','😱','😨','😰'].map(value=>({name:value,emoji:value}));
 const MOODS=[...TEXT_MOODS,...EMOJI_MOODS];
-const REACTIONS=[{name:'抱抱你',emoji:'🤗'},{name:'收到啦',emoji:'💌'},{name:'想你了',emoji:'💕'}];
-const THEMES=[{id:'milk',name:'奶粉'},{id:'night',name:'夜紫'},{id:'blue',name:'云蓝'},{id:'berry',name:'草莓'}];
-let authPassword=NEEDS_PASSWORD?'':null,selectedMoods=[],notes=[],currentFilter='all',toastTimer=null,reactingId=null;
-const $=id=>document.getElementById(id);const moodGrid=$('moodGrid'),filters=$('filters'),historyList=$('historyList'),loading=$('loading'),toast=$('toast'),notice=$('notice'),noticeText=$('noticeText'),noteText=$('noteText'),submitBtn=$('submitBtn'),senderInput=$('senderInput'),tagsInput=$('tagsInput'),counter=$('counter');
+const REACTIONS=[{name:'抱抱你',emoji:'🤗'},{name:'收到啦',emoji:'💌'},{name:'想你了',emoji:'💗'}];
+let authPassword=localStorage.getItem('moodPassword')||'',selectedMoods=[],notes=[],currentFilter='all',toastTimer=null,reactingId=null,calendarDate=new Date();
+const $=id=>document.getElementById(id);
+const moodGrid=$('moodGrid'),filters=$('filters'),historyList=$('historyList'),loading=$('loading'),toast=$('toast'),notice=$('notice'),noticeText=$('noticeText'),noteText=$('noteText'),submitBtn=$('submitBtn'),senderInput=$('senderInput'),tagsInput=$('tagsInput'),counter=$('counter');
 function headers(){const value={'Content-Type':'application/json'};if(authPassword)value['X-Mood-Password']=authPassword;return value}
-function showToast(message){clearTimeout(toastTimer);toast.textContent=message;toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),2200)}
+function showToast(message){clearTimeout(toastTimer);toast.textContent=message;toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),2400)}
 function escapeHtml(value){const div=document.createElement('div');div.textContent=value||'';return div.innerHTML}
 function moodInfo(name){return MOODS.find(m=>m.name===name)||{name,emoji:name}}
 function shortMoodName(name){return name==='想一个人静静'?'想静静':name}
@@ -72,30 +244,35 @@ function moodDisplay(name){const info=moodInfo(name);return TEXT_MOODS.some(m=>m
 function defaultReactions(){return Object.fromEntries(REACTIONS.map(reaction=>[reaction.name,0]))}
 function noteReactions(note){return {...defaultReactions(),...(note.reactions||{})}}
 function formatTime(iso){if(!iso)return'暂无';const date=new Date(iso);if(Number.isNaN(date.getTime()))return'刚刚';const now=new Date();const pad=n=>String(n).padStart(2,'0');const time=`${pad(date.getHours())}:${pad(date.getMinutes())}`;const sameDay=date.getFullYear()===now.getFullYear()&&date.getMonth()===now.getMonth()&&date.getDate()===now.getDate();if(sameDay)return`今天 ${time}`;return`${date.getMonth()+1}/${date.getDate()} ${time}`}
+function localDayKey(iso){const date=new Date(iso);if(Number.isNaN(date.getTime()))return'';const pad=n=>String(n).padStart(2,'0');return`${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`}
 function renderMoodButtons(){moodGrid.innerHTML=MOODS.map(mood=>`<button class="mood-btn" type="button" data-mood="${mood.name}" title="${mood.name}" aria-label="${mood.name}">${mood.emoji}</button>`).join('')}
-function renderFilters(){filters.innerHTML=[`<button class="filter ${currentFilter==='all'?'active':''}" data-filter="all">全部</button>`,...TEXT_MOODS.map(mood=>`<button class="filter ${currentFilter===mood.name?'active':''}" data-filter="${mood.name}">${mood.emoji} ${shortMoodName(mood.name)}</button>`)].join('')}
-function renderThemes(){const current=localStorage.getItem('moodTheme')||'milk';document.documentElement.dataset.theme=current;$('themeSwitch').innerHTML=THEMES.map(item=>`<button class="theme-chip ${item.id===current?'active':''}" data-theme="${item.id}">${item.name}</button>`).join('')}
-function updateToday(){const now=new Date();const pad=n=>String(n).padStart(2,'0');const week='日一二三四五六'[now.getDay()];$('todayDate').textContent=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}　周${week}`}
+function renderFilters(){filters.innerHTML=[`<button class="filter ${currentFilter==='all'?'active':''}" data-filter="all">全部</button>`,...TEXT_MOODS.map(mood=>`<button class="filter ${currentFilter===mood.name?'active':''}" data-filter="${mood.name}">${mood.emoji}<span>${shortMoodName(mood.name)}</span></button>`)].join('')}
+function updateToday(){const now=new Date();const pad=n=>String(n).padStart(2,'0');const week='日一二三四五六'[now.getDay()];$('todayDate').textContent=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} 周${week}`}
 function updateNotice(){const reminders={'生气':'他今天可能需要你多一点耐心和温柔。','委屈':'他心里可能有一点小委屈，记得抱抱他。','难过':'他今天心情不太好，一句温暖的话会很有用。','需要安慰':'他正在认真发出需要被靠近的信号。','😞':'他今天可能有点低落，轻轻陪一下就很好。','😟':'他好像有点担心，记得告诉他你在。','😣':'他可能撑得有点辛苦，给他一点软软的安慰。','😖':'他今天可能不太舒服，别让他一个人扛。','☹️':'他看起来需要一点点阳光和抱抱。','😓':'他可能有点累了，陪他慢慢缓一缓。','😱':'他可能被吓到了，先让他安心下来。','😨':'他可能有些害怕，温柔地靠近他。','😰':'他可能很紧张，告诉他慢慢来就好。'};const message=selectedMoods.map(m=>reminders[m]).find(Boolean);if(!message){notice.classList.remove('show');return}noticeText.textContent=message;notice.classList.add('show')}
-function clearForm(){selectedMoods=[];noteText.value='';tagsInput.value='';document.querySelectorAll('.mood-btn').forEach(btn=>btn.classList.remove('selected'));counter.textContent='0/500';updateNotice()}
-async function loadWeather(query='city=厦门海沧'){try{const res=await fetch(`/api/weather?${query}`);const data=await res.json();$('weatherIcon').textContent=data.emoji||'🌤️';$('weatherCity').textContent=data.city||'厦门海沧';$('weatherTemp').textContent=data.temperature??'--';$('weatherText').textContent=data.weather||'暂不可用';$('weatherRange').textContent=(data.today_high!=null&&data.today_low!=null)?`明日 ${data.tomorrow} · ↑${data.today_high}° ↓${data.today_low}°`:'明日天气加载中';$('weatherHumidity').textContent=data.humidity!=null?`湿度 ${data.humidity}%`:'湿度 --';$('weatherWind').textContent=data.wind_level!=null?`东南风 ${data.wind_level}级`:'风力 --';$('weatherTip').textContent=data.reminder||'今天也要好好照顾自己。'}catch(error){$('weatherTip').textContent='天气暂时没有取到，出门前再看一眼窗外。'}}
-function useCurrentLocation(){if(!navigator.geolocation){showToast('这个设备暂时不支持定位');return}showToast('正在请求定位...');navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude}=pos.coords;loadWeather(`lat=${latitude}&lon=${longitude}`);showToast('已切换到当前位置天气')},()=>{showToast('定位被拒绝，继续显示厦门海沧');loadWeather()},{enableHighAccuracy:false,timeout:9000,maximumAge:900000})}
-async function loadAnalysis(){if(NEEDS_PASSWORD&&!authPassword){$('analysisSummary').textContent='输入密码后显示智能分析';$('analysisSuggestion').textContent='小蜥蜴会根据你的最近记录生成提醒。';return}try{const res=await fetch('/api/analysis',{headers:headers()});const data=await res.json();if(!res.ok)throw new Error('analysis failed');$('analysisSummary').textContent=data.summary||'小蜥蜴看见了你最近的心情。';$('analysisSuggestion').textContent=data.suggestion||'先照顾好今天的自己。'}catch(error){$('analysisSummary').textContent='暂时没有取到分析';$('analysisSuggestion').textContent='记录功能仍然正常，稍后再刷新看看。'}}
-async function fetchNotes(){loading.classList.add('show');try{const res=await fetch('/api/notes',{headers:headers()});if(!res.ok)throw new Error('load failed');const data=await res.json();notes=Array.isArray(data)?data:[];renderHistory();loadAnalysis()}catch(error){notes=[];renderHistory();showToast('加载失败，请稍后再试')}finally{loading.classList.remove('show')}}
+function updateSelectedStrip(){const strip=$('selectedStrip');if(!selectedMoods.length){strip.classList.remove('show');strip.textContent='';return}strip.textContent=`已选择：${selectedMoods.map(name=>moodInfo(name).emoji).join(' ')}（最多 3 个）`;strip.classList.add('show')}
+function clearForm(){selectedMoods=[];noteText.value='';tagsInput.value='';document.querySelectorAll('.mood-btn').forEach(btn=>btn.classList.remove('selected'));counter.textContent='0/500';updateNotice();updateSelectedStrip()}
+async function loadWeather(query='city=厦门海沧'){try{const res=await fetch(`/api/weather?${query}`);const data=await res.json();$('weatherIcon').textContent=data.emoji||'🌤️';$('weatherCity').textContent=data.city||'厦门海沧';$('weatherTemp').textContent=data.temperature??'--';$('weatherText').textContent=data.weather||'暂不可用';$('weatherRange').textContent=(data.today_high!=null&&data.today_low!=null)?`明日 ${data.tomorrow} · ↑${data.today_high}° ↓${data.today_low}°`:'明日天气加载中';$('weatherHumidity').textContent=data.humidity!=null?`湿度 ${data.humidity}%`:'湿度 --';$('weatherWind').textContent=data.wind_level!=null?`风力 ${data.wind_level}级`:'风力 --';$('weatherTip').textContent=data.reminder||'今天也要好好照顾自己。'}catch(error){$('weatherTip').textContent='天气暂时没有取到，出门前再看一眼窗外。'}}
+function useCurrentLocation(){if(!navigator.geolocation){showToast('这个设备暂时不支持定位');return}showToast('正在请求定位...');navigator.geolocation.getCurrentPosition(pos=>{const {latitude,longitude}=pos.coords;loadWeather(`lat=${latitude}&lon=${longitude}`);showToast('已切换到当前位置天气')},()=>showToast('定位被拒绝，继续显示厦门海沧'),{enableHighAccuracy:false,timeout:9000,maximumAge:900000})}
+async function loadAnalysis(){if(NEEDS_PASSWORD&&!authPassword){$('analysisSummary').textContent='输入密码后显示智能分析';$('analysisSuggestion').textContent='小蜥蜴会根据你的最近记录生成提醒。';return}try{const res=await fetch('/api/analysis',{headers:headers()});const data=await res.json();if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(data.error||'analysis failed');$('analysisSummary').textContent=data.summary||'小蜥蜴看见了你最近的心情。';$('analysisSuggestion').textContent=data.suggestion||'先照顾好今天的自己。'}catch(error){$('analysisSummary').textContent='暂时没有取到分析';$('analysisSuggestion').textContent=error.message||'记录功能仍然正常，稍后再刷新看看。'}}
+async function fetchNotes(){loading.classList.add('show');try{const res=await fetch('/api/notes',{headers:headers()});const data=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(data.error||'加载失败');notes=Array.isArray(data)?data:[];renderHistory();renderCalendar();loadAnalysis()}catch(error){showToast(error.message||'加载失败，请稍后再试')}finally{loading.classList.remove('show')}}
 async function refreshNotes(){await fetchNotes();showToast('已刷新')}
-async function submitMood(){const text=noteText.value.trim();if(!selectedMoods.length)return showToast('请先选择心情');if(!text)return showToast('写几句话再发送吧');submitBtn.disabled=true;submitBtn.textContent='正在发送...';try{const res=await fetch('/api/notes',{method:'POST',headers:headers(),body:JSON.stringify({mood:selectedMoods.join(','),text,sender:senderInput.value.trim(),tags:tagsInput.value.trim()})});const payload=await res.json().catch(()=>({}));if(!res.ok){showToast(payload.error||'发送失败');return}showToast(res.status===202?'已临时保存，请检查存储配置':'小蜥蜴收到啦');clearForm();await fetchNotes()}catch(error){showToast('网络出错了')}finally{submitBtn.disabled=false;submitBtn.textContent='提交心情日记 ♡'}}
-async function addReaction(id,reaction){reactingId=`${id}:${reaction}`;renderHistory();try{const res=await fetch(`/api/notes/${id}/reactions`,{method:'POST',headers:headers(),body:JSON.stringify({reaction})});const payload=await res.json().catch(()=>({}));if(!res.ok){showToast(payload.error||'回应失败');return}notes=notes.map(note=>note.id===id?payload.note:note);renderHistory();showToast('回应已送达')}catch(error){showToast('回应失败，请稍后再试')}finally{reactingId=null;renderHistory()}}
-async function deleteNote(id){if(!confirm('确定删除这条记录吗？'))return;try{const res=await fetch(`/api/notes/${id}`,{method:'DELETE',headers:headers()});if(!res.ok)throw new Error('delete failed');notes=notes.filter(note=>note.id!==id);renderHistory();loadAnalysis();showToast('已删除')}catch(error){showToast('删除失败')}}
-async function doLogin(){const password=$('passwordInput').value.trim();if(!password)return;try{const res=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});if(!res.ok){showToast('密码不正确');return}authPassword=password;$('loginOverlay').classList.remove('show');await fetchNotes()}catch(error){showToast('验证失败')}}
+async function submitMood(){const text=noteText.value.trim();if(!selectedMoods.length)return showToast('请先选择心情');if(!text)return showToast('写几句话再发送吧');submitBtn.disabled=true;submitBtn.textContent='正在发送...';try{const res=await fetch('/api/notes',{method:'POST',headers:headers(),body:JSON.stringify({mood:selectedMoods.join(','),text,sender:senderInput.value.trim(),tags:tagsInput.value.trim()})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok){showToast(payload.error||'发送失败');return}showToast('小蜥蜴收到啦');clearForm();await fetchNotes()}catch(error){showToast('网络出错了')}finally{submitBtn.disabled=false;submitBtn.textContent='提交心情日记 ♡'}}
+async function addReaction(id,reaction){reactingId=`${id}:${reaction}`;renderHistory();try{const res=await fetch(`/api/notes/${id}/reactions`,{method:'POST',headers:headers(),body:JSON.stringify({reaction})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok){showToast(payload.error||'回应失败');return}notes=notes.map(note=>note.id===id?payload.note:note);renderHistory();renderCalendar();showToast('回应已送达')}catch(error){showToast('回应失败，请稍后再试')}finally{reactingId=null;renderHistory()}}
+async function deleteNote(id){if(!confirm('确定删除这条记录吗？'))return;try{const res=await fetch(`/api/notes/${id}`,{method:'DELETE',headers:headers()});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(payload.error||'delete failed');notes=notes.filter(note=>note.id!==id);renderHistory();renderCalendar();loadAnalysis();showToast('已删除')}catch(error){showToast(error.message||'删除失败')}}
+async function doLogin(){const password=$('passwordInput').value.trim();if(!password)return;try{const res=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});if(!res.ok){showToast('密码不正确');return}authPassword=password;localStorage.setItem('moodPassword',password);$('loginOverlay').classList.remove('show');await fetchNotes()}catch(error){showToast('验证失败')}}
+function handleUnauthorized(){authPassword='';localStorage.removeItem('moodPassword');$('loginOverlay').classList.add('show');showToast('密码已失效，请重新输入')}
 function renderHistory(){const filtered=currentFilter==='all'?notes:notes.filter(note=>String(note.mood||'').split('+').includes(currentFilter));$('totalCount').textContent=notes.length;$('latestTime').textContent=notes.length?formatTime(notes[0].time):'暂无';if(!filtered.length){historyList.innerHTML='<div class="empty">还没有记录，写下今天的心情吧。</div>';return}historyList.innerHTML=filtered.map(note=>{const moodTags=String(note.mood||'').split('+').filter(Boolean).map(name=>`<span class="mood-tag">${moodDisplay(name)}</span>`).join('');const tags=Array.isArray(note.tags)?note.tags:[];const tagHtml=tags.length?`<div class="tag-row">${tags.map(tag=>`<span class="tag">#${escapeHtml(tag)}</span>`).join('')}</div>`:'';const reactions=noteReactions(note);const reactionHtml=`<div class="reaction-row">${REACTIONS.map(item=>{const key=`${note.id}:${item.name}`;return`<button class="reaction-btn" onclick="addReaction(${Number(note.id)}, '${item.name}')" ${reactingId===key?'disabled':''}>${item.emoji} ${item.name} ${Number(reactions[item.name]||0)}</button>`}).join('')}</div>`;return`<article class="note"><div class="note-top"><div class="mood-tags">${moodTags}</div><span class="time">${formatTime(note.time)}</span></div><div class="meta">来自 ${escapeHtml(note.sender||'匿名')}</div><div class="note-text">${escapeHtml(note.text)}</div>${tagHtml}${reactionHtml}<button class="delete-btn" onclick="deleteNote(${Number(note.id)})">删除</button></article>`}).join('')}
-moodGrid.addEventListener('click',event=>{const button=event.target.closest('.mood-btn');if(!button)return;const mood=button.dataset.mood;if(selectedMoods.includes(mood)){selectedMoods=selectedMoods.filter(item=>item!==mood);button.classList.remove('selected')}else{if(selectedMoods.length>=3){showToast('一次最多选择 3 种心情');return}selectedMoods.push(mood);button.classList.add('selected')}updateNotice()});
+function renderCalendar(){const year=calendarDate.getFullYear();const month=calendarDate.getMonth();$('calendarTitle').textContent=`${year}年${String(month+1).padStart(2,'0')}月`;const byDay={};notes.forEach(note=>{const day=localDayKey(note.time);if(!day)return;byDay[day]=byDay[day]||[];byDay[day].push(...String(note.mood||'').split('+').filter(Boolean))});const first=new Date(year,month,1);const days=new Date(year,month+1,0).getDate();const start=(first.getDay()+6)%7;let html='';for(let i=0;i<start;i++)html+='<div class="day blank"></div>';const todayKey=localDayKey(new Date().toISOString());let monthCount=0;for(let d=1;d<=days;d++){const key=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const moods=byDay[key]||[];if(moods.length)monthCount++;const icons=[...new Set(moods.map(name=>moodInfo(name).emoji))].slice(0,2).join('');html+=`<div class="day ${key===todayKey?'today':''}"><span class="day-num">${d}</span><div class="day-moods">${icons}</div></div>`}$('calendarGrid').innerHTML=html;$('monthCount').textContent=monthCount;$('streakCount').textContent=countStreak(byDay)}
+function countStreak(byDay){let streak=0;const cursor=new Date();for(;;){const key=localDayKey(cursor.toISOString());if(!byDay[key])break;streak++;cursor.setDate(cursor.getDate()-1)}return streak}
+moodGrid.addEventListener('click',event=>{const button=event.target.closest('.mood-btn');if(!button)return;const mood=button.dataset.mood;if(selectedMoods.includes(mood)){selectedMoods=selectedMoods.filter(item=>item!==mood);button.classList.remove('selected')}else{if(selectedMoods.length>=3){showToast('一次最多选择 3 种心情');return}selectedMoods.push(mood);button.classList.add('selected')}updateNotice();updateSelectedStrip()});
 filters.addEventListener('click',event=>{const button=event.target.closest('.filter');if(!button)return;currentFilter=button.dataset.filter;renderFilters();renderHistory()});
-$('themeSwitch').addEventListener('click',event=>{const button=event.target.closest('.theme-chip');if(!button)return;localStorage.setItem('moodTheme',button.dataset.theme);renderThemes()});
+$('prevMonth').addEventListener('click',()=>{calendarDate.setMonth(calendarDate.getMonth()-1);renderCalendar()});
+$('nextMonth').addEventListener('click',()=>{calendarDate.setMonth(calendarDate.getMonth()+1);renderCalendar()});
 noteText.addEventListener('input',()=>{counter.textContent=`${noteText.value.length}/500`});
 $('passwordInput').addEventListener('keydown',event=>{if(event.key==='Enter')doLogin()});
-window.addEventListener('load',()=>{setTimeout(()=>$('splash').classList.add('hide'),500)});
+window.addEventListener('load',()=>{setTimeout(()=>$('splash').classList.add('hide'),450)});
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}
-updateToday();renderThemes();renderMoodButtons();renderFilters();loadWeather();if(NEEDS_PASSWORD){$('loginOverlay').classList.add('show');loadAnalysis()}else{fetchNotes()}
+updateToday();renderMoodButtons();renderFilters();renderCalendar();loadWeather();if(NEEDS_PASSWORD&&!authPassword){$('loginOverlay').classList.add('show');loadAnalysis()}else{fetchNotes()}
 </script>
 </body>
 </html>

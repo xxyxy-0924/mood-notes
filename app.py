@@ -1,9 +1,12 @@
 """
 Daily mood notes - Flask backend.
 
-Stores notes in JSONBin when configured, with in-memory storage as a local fallback.
+Notes are stored in JSONBin when configured. If JSONBin is unavailable, writes
+fail closed instead of falling back to memory, so old cloud data cannot be
+accidentally overwritten by an empty temporary list.
 """
 
+import json
 import os
 import threading
 from datetime import datetime, timezone
@@ -32,7 +35,8 @@ TEXT_MOODS = [
 EMOJI_MOODS = ["😋", "🥲", "🥹", "🧐", "🤓", "😜", "😝", "😞", "😟", "😣", "😖", "☹️", "😓", "😱", "😨", "😰"]
 VALID_MOODS = TEXT_MOODS + EMOJI_MOODS
 REACTIONS = ["抱抱你", "收到啦", "想你了"]
-NEGATIVE_MOODS = {"难过", "生气", "委屈", "需要安慰", "😞", "😟", "😣", "😖", "☹️", "😓", "😱", "😨", "😰", "🥲", "🥹"}
+NEGATIVE_MOODS = {"难过", "生气", "委屈", "需要安慰", "想一个人静静", "🥲", "🥹", "😞", "😟", "😣", "😖", "☹️", "😓", "😱", "😨", "😰"}
+
 MAX_TEXT_LENGTH = 500
 MAX_SENDER_LENGTH = 20
 MAX_TAGS = 10
@@ -42,18 +46,56 @@ MEMORY_STORAGE = []
 storage_lock = threading.Lock()
 
 WEATHER_CODES = {
-    0: "晴", 1: "多云", 2: "多云", 3: "阴", 45: "雾", 48: "雾",
-    51: "小雨", 53: "小雨", 55: "小雨", 56: "冻雨", 57: "冻雨",
-    61: "小雨", 63: "中雨", 65: "大雨", 66: "冻雨", 67: "冻雨",
-    71: "小雪", 73: "中雪", 75: "大雪", 77: "雪",
-    80: "阵雨", 81: "阵雨", 82: "强阵雨", 85: "阵雪", 86: "阵雪",
-    95: "雷雨", 96: "雷雨", 99: "雷雨",
+    0: "晴",
+    1: "多云",
+    2: "多云",
+    3: "阴",
+    45: "雾",
+    48: "雾",
+    51: "小雨",
+    53: "小雨",
+    55: "小雨",
+    56: "冻雨",
+    57: "冻雨",
+    61: "小雨",
+    63: "中雨",
+    65: "大雨",
+    66: "冻雨",
+    67: "冻雨",
+    71: "小雪",
+    73: "中雪",
+    75: "大雪",
+    77: "雪",
+    80: "阵雨",
+    81: "阵雨",
+    82: "强阵雨",
+    85: "阵雪",
+    86: "阵雪",
+    95: "雷雨",
+    96: "雷雨",
+    99: "雷雨",
 }
 WEATHER_EMOJIS = {
-    "晴": "☀️", "多云": "⛅", "阴": "☁️", "雾": "🌫️", "小雨": "🌦️",
-    "中雨": "🌧️", "大雨": "🌧️", "阵雨": "🌧️", "强阵雨": "⛈️", "雷雨": "⛈️",
-    "小雪": "🌨️", "中雪": "🌨️", "大雪": "❄️", "雪": "❄️", "冻雨": "🌧️",
+    "晴": "☀️",
+    "多云": "⛅",
+    "阴": "☁️",
+    "雾": "🌫️",
+    "小雨": "🌧️",
+    "中雨": "🌧️",
+    "大雨": "🌧️",
+    "阵雨": "🌦️",
+    "强阵雨": "⛈️",
+    "雷雨": "⛈️",
+    "小雪": "🌨️",
+    "中雪": "🌨️",
+    "大雪": "❄️",
+    "雪": "❄️",
+    "冻雨": "🌧️",
 }
+
+
+class StorageUnavailable(RuntimeError):
+    """Raised when JSONBin cannot be reached or rejects a request."""
 
 
 def utc_now_iso():
@@ -68,7 +110,6 @@ def normalize_reactions(value):
     reactions = default_reactions()
     if not isinstance(value, dict):
         return reactions
-
     for reaction in REACTIONS:
         try:
             reactions[reaction] = max(0, int(value.get(reaction, 0)))
@@ -78,11 +119,7 @@ def normalize_reactions(value):
 
 
 def normalize_tags(value):
-    if isinstance(value, list):
-        raw_tags = value
-    else:
-        raw_tags = str(value or "").split(",")
-
+    raw_tags = value if isinstance(value, list) else str(value or "").split(",")
     tags = []
     for tag in raw_tags:
         clean = str(tag).strip()[:MAX_TAG_LENGTH]
@@ -96,7 +133,6 @@ def normalize_tags(value):
 def normalize_note(note):
     if not isinstance(note, dict):
         return None
-
     try:
         note_id = int(note.get("id") or datetime.now(timezone.utc).timestamp() * 1000)
     except (TypeError, ValueError):
@@ -109,7 +145,6 @@ def normalize_note(note):
 
     sender = str(note.get("sender") or "匿名").strip()[:MAX_SENDER_LENGTH] or "匿名"
     timestamp = str(note.get("time") or utc_now_iso()).strip()
-
     return {
         "id": note_id,
         "mood": mood,
@@ -124,7 +159,6 @@ def normalize_note(note):
 def normalize_notes(notes):
     if not isinstance(notes, list):
         return []
-
     cleaned = []
     for note in notes:
         normalized = normalize_note(note)
@@ -149,37 +183,29 @@ def jsonbin_headers():
     }
 
 
-def load_notes_from_jsonbin():
-    if not JSONBIN_API_KEY or not JSONBIN_BIN_ID:
-        return load_notes_from_memory()
+def jsonbin_configured():
+    return bool(JSONBIN_API_KEY and JSONBIN_BIN_ID)
 
+
+def load_notes_from_jsonbin():
     try:
         response = requests.get(
             f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
             headers=jsonbin_headers(),
             timeout=10,
         )
-        if response.status_code == 200:
-            data = response.json()
-            return extract_notes_from_jsonbin_record(data.get("record"))
-
-        app.logger.warning("JSONBin load error: %s %s", response.status_code, response.text[:200])
-        return load_notes_from_memory()
     except requests.RequestException as exc:
-        app.logger.warning("Error loading from JSONBin: %s", exc)
-        return load_notes_from_memory()
+        raise StorageUnavailable(f"JSONBin 读取失败: {exc}") from exc
+
+    if response.status_code != 200:
+        raise StorageUnavailable(f"JSONBin 读取失败: {response.status_code} {response.text[:160]}")
+
+    data = response.json()
+    return extract_notes_from_jsonbin_record(data.get("record"))
 
 
 def save_notes_to_jsonbin(notes):
-    if not JSONBIN_API_KEY or not JSONBIN_BIN_ID:
-        save_notes_to_memory(notes)
-        return False
-
-    payload = {
-        "notes": normalize_notes(notes),
-        "updated_at": utc_now_iso(),
-    }
-
+    payload = {"notes": normalize_notes(notes), "updated_at": utc_now_iso()}
     try:
         response = requests.put(
             f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}",
@@ -187,16 +213,12 @@ def save_notes_to_jsonbin(notes):
             headers=jsonbin_headers(),
             timeout=10,
         )
-        if response.status_code in (200, 201):
-            return True
-
-        app.logger.warning("JSONBin save error: %s %s", response.status_code, response.text[:200])
-        save_notes_to_memory(notes)
-        return False
     except requests.RequestException as exc:
-        app.logger.warning("Error saving to JSONBin: %s", exc)
-        save_notes_to_memory(notes)
-        return False
+        raise StorageUnavailable(f"JSONBin 保存失败: {exc}") from exc
+
+    if response.status_code not in (200, 201):
+        raise StorageUnavailable(f"JSONBin 保存失败: {response.status_code} {response.text[:160]}")
+    return True
 
 
 def load_notes_from_memory():
@@ -208,19 +230,27 @@ def save_notes_to_memory(notes):
     global MEMORY_STORAGE
     with storage_lock:
         MEMORY_STORAGE = normalize_notes(notes)
+    return True
 
 
 def load_notes():
-    if JSONBIN_API_KEY and JSONBIN_BIN_ID:
+    if jsonbin_configured():
         return load_notes_from_jsonbin()
     return load_notes_from_memory()
 
 
 def save_notes(notes):
-    if JSONBIN_API_KEY and JSONBIN_BIN_ID:
+    if jsonbin_configured():
         return save_notes_to_jsonbin(notes)
-    save_notes_to_memory(notes)
-    return True
+    return save_notes_to_memory(notes)
+
+
+def storage_error_response(exc):
+    app.logger.warning("Storage unavailable: %s", exc)
+    return jsonify({
+        "error": "云端存储暂时不可用，已停止保存以保护旧数据。请稍后刷新或检查 JSONBin 配置。",
+        "detail": str(exc),
+    }), 503
 
 
 def weather_text(code):
@@ -258,7 +288,6 @@ def weather_reminder(today, tomorrow, precip_probability):
 def geocode_city(city):
     if city == "厦门海沧":
         return {"name": "厦门海沧", "latitude": 24.4845, "longitude": 118.0329}
-
     response = requests.get(
         "https://geocoding-api.open-meteo.com/v1/search",
         params={"name": city, "count": 1, "language": "zh", "format": "json"},
@@ -287,7 +316,7 @@ def fetch_weather(city=None, lat=None, lon=None):
         params={
             "latitude": location["latitude"],
             "longitude": location["longitude"],
-            "current": "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m",
+            "current": "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m",
             "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
             "timezone": "auto",
             "forecast_days": 2,
@@ -332,23 +361,20 @@ def local_analysis(notes):
     total = len(notes)
     if not total:
         return {
-            "summary": "还没有记录，今天可以先写下第一句话。",
+            "summary": "还没有记录，今天可以先写下一句话。",
             "suggestion": "不用写得很完整，几个字也算认真照顾自己。",
             "tone": "empty",
             "source": "local",
         }
-
     recent_moods = [mood for note in recent for mood in split_note_moods(note)]
     negative_count = sum(1 for mood in recent_moods if mood in NEGATIVE_MOODS)
     positive_count = sum(1 for mood in recent_moods if mood in {"开心", "😋", "😜", "😝", "🤓"})
-
     unique_days = []
     for note in notes:
         day = str(note.get("time", ""))[:10]
         if day and day not in unique_days:
             unique_days.append(day)
     streak_hint = f"你已经留下 {total} 条心情记录，" if total >= 2 else "你已经开始记录自己，"
-
     if negative_count >= max(2, positive_count + 1):
         return {
             "summary": f"{streak_hint}最近低落和紧张的信号偏多。",
@@ -379,25 +405,16 @@ def local_analysis(notes):
 
 
 def deepseek_analysis(notes):
-    if not DEEPSEEK_API_KEY:
+    if not DEEPSEEK_API_KEY or not notes:
         return None
-
     recent = [
-        {
-            "mood": note.get("mood"),
-            "text": note.get("text"),
-            "time": note.get("time"),
-            "tags": note.get("tags", []),
-        }
+        {"mood": note.get("mood"), "text": note.get("text"), "time": note.get("time"), "tags": note.get("tags", [])}
         for note in notes[:8]
     ]
-    if not recent:
-        return None
-
     prompt = (
         "你是一个温柔克制的心情日记助手，名字叫小蜥蜴。"
-        "请根据用户最近的心情记录，用中文输出 JSON，字段只有 summary、suggestion、tone。"
-        "summary 不超过 32 字，suggestion 不超过 42 字，tone 从 care/bright/steady/gentle 中选一个。"
+        "根据最近记录输出紧凑 JSON，字段只有 summary、suggestion、tone。"
+        "summary 不超过 32 字，suggestion 不超过 42 字，tone 从 care/bright/steady/gentle 选择。"
         "不要诊断疾病，不要夸张，不要说教。记录如下："
         f"{recent}"
     )
@@ -417,9 +434,7 @@ def deepseek_analysis(notes):
             timeout=12,
         )
         response.raise_for_status()
-        content = response.json()["choices"][0]["message"]["content"].strip()
-        import json
-        parsed = json.loads(content)
+        parsed = json.loads(response.json()["choices"][0]["message"]["content"].strip())
         return {
             "summary": str(parsed.get("summary") or "小蜥蜴看见了你最近的心情。")[:60],
             "suggestion": str(parsed.get("suggestion") or "先照顾好今天的自己。")[:80],
@@ -429,6 +444,16 @@ def deepseek_analysis(notes):
     except Exception as exc:  # noqa: BLE001
         app.logger.warning("DeepSeek analysis fallback: %s", exc)
         return None
+
+
+def check_auth():
+    if not ACCESS_PASSWORD:
+        return True
+    return request.headers.get("X-Mood-Password", "").strip() == ACCESS_PASSWORD
+
+
+def unauthorized_response():
+    return jsonify({"error": "需要密码验证，请重新输入密码。"}), 401
 
 
 @app.route("/")
@@ -450,21 +475,10 @@ def service_worker():
 def login():
     if not ACCESS_PASSWORD:
         return jsonify({"ok": True})
-
     data = request.get_json(silent=True) or {}
     if str(data.get("password", "")).strip() == ACCESS_PASSWORD:
         return jsonify({"ok": True})
     return jsonify({"ok": False, "error": "密码不正确"}), 403
-
-
-def check_auth():
-    if not ACCESS_PASSWORD:
-        return True
-    return request.headers.get("X-Mood-Password", "").strip() == ACCESS_PASSWORD
-
-
-def unauthorized_response():
-    return jsonify({"error": "需要密码验证"}), 401
 
 
 @app.route("/api/weather", methods=["GET"])
@@ -498,29 +512,31 @@ def api_weather():
 def api_analysis():
     if not check_auth():
         return unauthorized_response()
-
-    notes = load_notes()
-    analysis = deepseek_analysis(notes) or local_analysis(notes)
-    return jsonify(analysis)
+    try:
+        notes = load_notes()
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
+    return jsonify(deepseek_analysis(notes) or local_analysis(notes))
 
 
 @app.route("/api/notes", methods=["GET"])
 def api_get_notes():
     if not check_auth():
         return unauthorized_response()
-    return jsonify(load_notes())
+    try:
+        return jsonify(load_notes())
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
 
 
 @app.route("/api/notes", methods=["POST"])
 def api_create_note():
     if not check_auth():
         return unauthorized_response()
-
     data = request.get_json(silent=True) or {}
     mood_input = str(data.get("mood", "")).strip()
     text = str(data.get("text", "")).strip()
     sender = str(data.get("sender", "")).strip()[:MAX_SENDER_LENGTH] or "匿名"
-
     if not mood_input:
         return jsonify({"error": "请选择一种心情"}), 400
     if not text:
@@ -533,12 +549,10 @@ def api_create_note():
         clean = mood.strip()
         if clean and clean not in moods:
             moods.append(clean)
-
     if not moods:
         return jsonify({"error": "请选择一种心情"}), 400
     if len(moods) > 3:
         return jsonify({"error": "一次最多选择 3 种心情"}), 400
-
     invalid_moods = [mood for mood in moods if mood not in VALID_MOODS]
     if invalid_moods:
         return jsonify({"error": f"心情类型无效: {invalid_moods[0]}"}), 400
@@ -552,33 +566,34 @@ def api_create_note():
         "reactions": default_reactions(),
         "time": utc_now_iso(),
     }
-
-    notes = load_notes()
-    notes.insert(0, note)
-    saved = save_notes(notes)
-
-    return jsonify(note), 201 if saved else 202
+    try:
+        notes = load_notes()
+        notes.insert(0, note)
+        save_notes(notes)
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
+    return jsonify(note), 201
 
 
 @app.route("/api/notes/<int:note_id>/reactions", methods=["POST"])
 def api_add_reaction(note_id):
     if not check_auth():
         return unauthorized_response()
-
     data = request.get_json(silent=True) or {}
     reaction = str(data.get("reaction", "")).strip()
     if reaction not in REACTIONS:
         return jsonify({"error": "回应类型无效"}), 400
-
-    notes = load_notes()
-    for note in notes:
-        if note.get("id") == note_id:
-            reactions = normalize_reactions(note.get("reactions", {}))
-            reactions[reaction] += 1
-            note["reactions"] = reactions
-            saved = save_notes(notes)
-            return jsonify({"ok": True, "saved": saved, "note": note})
-
+    try:
+        notes = load_notes()
+        for note in notes:
+            if note.get("id") == note_id:
+                reactions = normalize_reactions(note.get("reactions", {}))
+                reactions[reaction] += 1
+                note["reactions"] = reactions
+                save_notes(notes)
+                return jsonify({"ok": True, "saved": True, "note": note})
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
     return jsonify({"error": "记录不存在"}), 404
 
 
@@ -586,42 +601,50 @@ def api_add_reaction(note_id):
 def api_delete_note(note_id):
     if not check_auth():
         return unauthorized_response()
-
-    notes = load_notes()
-    next_notes = [note for note in notes if note.get("id") != note_id]
-    if len(next_notes) == len(notes):
-        return jsonify({"error": "记录不存在"}), 404
-
-    saved = save_notes(next_notes)
-    return jsonify({"ok": True, "saved": saved})
+    try:
+        notes = load_notes()
+        next_notes = [note for note in notes if note.get("id") != note_id]
+        if len(next_notes) == len(notes):
+            return jsonify({"error": "记录不存在"}), 404
+        save_notes(next_notes)
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
+    return jsonify({"ok": True, "saved": True})
 
 
 @app.route("/api/stats", methods=["GET"])
 def api_stats():
     if not check_auth():
         return unauthorized_response()
-
-    notes = load_notes()
+    try:
+        notes = load_notes()
+    except StorageUnavailable as exc:
+        return storage_error_response(exc)
     mood_counts = {mood: 0 for mood in VALID_MOODS}
     for note in notes:
-        for mood in str(note.get("mood", "")).split("+"):
+        for mood in split_note_moods(note):
             if mood in mood_counts:
                 mood_counts[mood] += 1
-
-    return jsonify({
-        "total": len(notes),
-        "moods": mood_counts,
-        "latest_time": notes[0]["time"] if notes else None,
-    })
+    return jsonify({"total": len(notes), "moods": mood_counts, "latest_time": notes[0]["time"] if notes else None})
 
 
 @app.route("/health")
 def health():
-    storage_type = "jsonbin" if JSONBIN_API_KEY and JSONBIN_BIN_ID else "memory (temporary)"
+    storage_type = "jsonbin" if jsonbin_configured() else "memory (temporary)"
+    storage_ok = True
+    storage_detail = "ok"
+    if jsonbin_configured():
+        try:
+            load_notes_from_jsonbin()
+        except StorageUnavailable as exc:
+            storage_ok = False
+            storage_detail = str(exc)
     return jsonify({
-        "status": "ok",
+        "status": "ok" if storage_ok else "degraded",
         "time": utc_now_iso(),
         "storage": storage_type,
+        "storage_ok": storage_ok,
+        "storage_detail": storage_detail,
         "password_enabled": bool(ACCESS_PASSWORD),
         "default_weather_city": DEFAULT_WEATHER_CITY,
         "deepseek_enabled": bool(DEEPSEEK_API_KEY),
