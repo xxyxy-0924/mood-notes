@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 JSONBIN_API_KEY = os.environ.get("JSONBIN_API_KEY", "").strip()
 JSONBIN_BIN_ID = os.environ.get("JSONBIN_BIN_ID", "").strip()
-ACCESS_PASSWORD = os.environ.get("MOOD_PASSWORD", "")
+ACCESS_PASSWORD = os.environ.get("MOOD_PASSWORD", "").strip()
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip() or "deepseek-chat"
 DEFAULT_WEATHER_CITY = os.environ.get("DEFAULT_WEATHER_CITY", "厦门海沧").strip() or "厦门海沧"
@@ -452,7 +452,7 @@ def login():
         return jsonify({"ok": True})
 
     data = request.get_json(silent=True) or {}
-    if data.get("password") == ACCESS_PASSWORD:
+    if str(data.get("password", "")).strip() == ACCESS_PASSWORD:
         return jsonify({"ok": True})
     return jsonify({"ok": False, "error": "密码不正确"}), 403
 
@@ -460,7 +460,7 @@ def login():
 def check_auth():
     if not ACCESS_PASSWORD:
         return True
-    return request.headers.get("X-Mood-Password", "") == ACCESS_PASSWORD
+    return request.headers.get("X-Mood-Password", "").strip() == ACCESS_PASSWORD
 
 
 def unauthorized_response():
