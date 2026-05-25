@@ -10,7 +10,7 @@
   --mascot-left: "🐰";
   --mascot-right: "🦎";
   --scene-extra: "🌸";
-  --scene-image: url("/static/themes/milk-scene.svg?v=skin5");
+  --scene-image: url("/static/themes/milk-scene.svg?v=skin6");
   --scene-pattern: radial-gradient(circle at 14% 20%, rgba(255,255,255,.95) 0 24px, transparent 25px),
                    radial-gradient(circle at 23% 16%, rgba(255,255,255,.75) 0 20px, transparent 21px),
                    radial-gradient(circle at 82% 18%, rgba(255,255,255,.72) 0 30px, transparent 31px),
@@ -30,7 +30,7 @@ html[data-theme="night"] {
   --mascot-left: "☾";
   --mascot-right: "🦎";
   --scene-extra: "🦇";
-  --scene-image: url("/static/themes/night-scene.svg?v=skin5");
+  --scene-image: url("/static/themes/night-scene.svg?v=skin6");
   --scene-pattern: radial-gradient(circle at 18% 22%, rgba(221,150,255,.22) 0 28px, transparent 29px),
                    radial-gradient(circle at 86% 18%, rgba(125,74,205,.35) 0 38px, transparent 39px),
                    radial-gradient(circle at 12% 70%, rgba(255,120,210,.22) 0 4px, transparent 5px),
@@ -49,7 +49,7 @@ html[data-theme="blue"] {
   --mascot-left: "☁️";
   --mascot-right: "🦎";
   --scene-extra: "🌈";
-  --scene-image: url("/static/themes/blue-scene.svg?v=skin5");
+  --scene-image: url("/static/themes/blue-scene.svg?v=skin6");
   --scene-pattern: radial-gradient(circle at 14% 24%, rgba(255,255,255,.98) 0 32px, transparent 33px),
                    radial-gradient(circle at 29% 18%, rgba(255,255,255,.82) 0 24px, transparent 25px),
                    radial-gradient(circle at 83% 22%, rgba(255,255,255,.78) 0 34px, transparent 35px),
@@ -68,7 +68,7 @@ html[data-theme="berry"] {
   --mascot-left: "🌷";
   --mascot-right: "🦎";
   --scene-extra: "🍓";
-  --scene-image: url("/static/themes/berry-scene.svg?v=skin5");
+  --scene-image: url("/static/themes/wz/wz1.png?v=skin6");
   --scene-pattern: repeating-linear-gradient(90deg, rgba(255,120,143,.10) 0 16px, transparent 16px 32px),
                    radial-gradient(circle at 16% 18%, rgba(255,255,255,.82) 0 22px, transparent 23px),
                    radial-gradient(circle at 84% 17%, rgba(255,145,165,.26) 0 34px, transparent 35px),
@@ -392,6 +392,89 @@ html[data-theme="night"] .field textarea::placeholder {
 
 html[data-theme="blue"] .hero::before {
   font-size: 62px !important;
+}
+
+html[data-theme="berry"] body::before {
+  background:
+    linear-gradient(180deg, rgba(255, 246, 249, .70), rgba(255, 240, 244, .84)),
+    url("/static/themes/wz/wz1.png?v=skin6") center top / min(520px, 118vw) auto repeat-y !important;
+  opacity: .88;
+}
+
+html[data-theme="berry"] body::after {
+  background:
+    linear-gradient(180deg, rgba(255, 244, 247, .54), rgba(255, 255, 255, .18)),
+    url("/static/themes/wz/wz5.png?v=skin6") right 38px / 128px auto no-repeat,
+    url("/static/themes/wz/wz3.png?v=skin6") left 520px / 132px auto no-repeat !important;
+  opacity: .56 !important;
+}
+
+html[data-theme="berry"] .app::before {
+  content: "" !important;
+  display: block !important;
+  position: fixed;
+  left: 50%;
+  bottom: calc(2px + var(--safe-bottom));
+  width: min(414px, 100%);
+  height: 190px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: -1;
+  background:
+    linear-gradient(0deg, rgba(255, 246, 249, .84), rgba(255, 246, 249, 0)),
+    url("/static/themes/wz/wz1.png?v=skin6") center 78% / 430px auto no-repeat;
+  opacity: .46;
+}
+
+html[data-theme="berry"] .app::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 76px auto auto 6px !important;
+  width: 104px !important;
+  height: 152px !important;
+  transform: none !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  background: url("/static/themes/wz/wz4.png?v=skin6") 0 0 / 104px auto no-repeat !important;
+  opacity: .82 !important;
+}
+
+html[data-theme="berry"] .hero {
+  background:
+    linear-gradient(180deg, rgba(255, 245, 249, .12), rgba(255, 255, 255, .10)),
+    url("/static/themes/wz/wz1.png?v=skin6") center 8% / cover no-repeat !important;
+}
+
+html[data-theme="berry"] .hero::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  left: 10px !important;
+  top: 28px !important;
+  width: 108px;
+  height: 146px;
+  background: url("/static/themes/wz/wz3.png?v=skin6") 0 0 / 108px auto no-repeat;
+  opacity: .95 !important;
+  filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .18));
+}
+
+html[data-theme="berry"] .hero::after {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  right: 9px !important;
+  top: 26px !important;
+  width: 116px;
+  height: 150px;
+  background: url("/static/themes/wz/wz5.png?v=skin6") right top / 116px auto no-repeat;
+  opacity: .94 !important;
+  filter: drop-shadow(0 10px 14px rgba(224, 93, 130, .16));
+}
+
+html[data-theme="berry"] .card,
+html[data-theme="berry"] .quote {
+  background: rgba(255, 255, 255, .82) !important;
+  border-color: rgba(255, 151, 172, .30) !important;
 }
 
 @media (max-width: 380px) {
