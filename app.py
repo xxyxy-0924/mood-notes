@@ -631,24 +631,28 @@ def api_stats():
 @app.route("/health")
 def health():
     storage_type = "jsonbin" if jsonbin_configured() else "memory (temporary)"
-    storage_ok = True
-    storage_detail = "ok"
-    if jsonbin_configured():
-        try:
-            load_notes_from_jsonbin()
-        except StorageUnavailable as exc:
-            storage_ok = False
-            storage_detail = str(exc)
     return jsonify({
-        "status": "ok" if storage_ok else "degraded",
+        "status": "ok",
         "time": utc_now_iso(),
         "storage": storage_type,
-        "storage_ok": storage_ok,
-        "storage_detail": storage_detail,
         "password_enabled": bool(ACCESS_PASSWORD),
         "default_weather_city": DEFAULT_WEATHER_CITY,
         "deepseek_enabled": bool(DEEPSEEK_API_KEY),
     })
+
+
+@app.route("/api/storage-check")
+def storage_check():
+    if not check_auth():
+        return unauthorized_response()
+    storage_type = "jsonbin" if jsonbin_configured() else "memory (temporary)"
+    if not jsonbin_configured():
+        return jsonify({"storage": storage_type, "storage_ok": True, "detail": "memory"})
+    try:
+        load_notes_from_jsonbin()
+        return jsonify({"storage": storage_type, "storage_ok": True, "detail": "ok"})
+    except StorageUnavailable as exc:
+        return jsonify({"storage": storage_type, "storage_ok": False, "detail": str(exc)}), 503
 
 
 if __name__ == "__main__":
