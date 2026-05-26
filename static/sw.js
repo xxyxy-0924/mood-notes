@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mood-notes-pwa-v20';
+const CACHE_NAME = 'mood-notes-pwa-v21';
 const APP_SHELL = [
   '/',
   '/manifest.webmanifest?v=blue1',
