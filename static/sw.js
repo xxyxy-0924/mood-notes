@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mood-notes-pwa-v21';
+const CACHE_NAME = 'mood-notes-pwa-v22';
 const APP_SHELL = [
   '/',
-  '/manifest.webmanifest?v=blue1',
-  '/static/app-icon-192.png?v=photo6',
-  '/static/app-icon-512.png?v=photo6'
+  '/manifest.webmanifest?v=blue2',
+  '/static/app-icon-192.png?v=photo7',
+  '/static/app-icon-512.png?v=photo7'
 ];
 
 self.addEventListener('install', event => {

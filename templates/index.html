@@ -8,9 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="小蜥蜴">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="/manifest.webmanifest?v=blue1">
-<link rel="icon" href="/static/app-icon-192.png?v=photo6" type="image/png">
-<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png?v=photo6">
+<link rel="manifest" href="/manifest.webmanifest?v=blue2">
+<link rel="icon" href="/static/app-icon-192.png?v=photo7" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png?v=photo7">
 <title>小蜥蜴日常</title>
 <style>
 :root{
@@ -41,8 +41,8 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .nav-btn:last-child{font-size:28px;letter-spacing:4px}
 .hero{position:relative;overflow:hidden;border-radius:30px;margin:4px 0 12px;padding:28px 20px 24px;min-height:188px;text-align:center;background:linear-gradient(180deg,#eefaff 0%,#ffffff 100%);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.82)}
 .hero:before{content:"";position:absolute;left:-30px;top:-22px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#b9e9ff 0 34%,transparent 35%),radial-gradient(circle at 72% 30%,#ffffff 0 22%,transparent 23%);opacity:.55}
-.hero:after{content:"🦎";position:absolute;right:22px;bottom:24px;font-size:58px;filter:drop-shadow(0 10px 16px rgba(51,139,100,.16))}
-.hero-icon{font-size:42px;margin-bottom:2px}
+.hero:after{content:"";position:absolute;right:24px;bottom:24px;width:74px;height:74px;border-radius:24px;background:linear-gradient(135deg,#bfeaff,#eefaff);opacity:.72}
+.hero-icon{display:none}
 .hero-title{font-size:31px;font-weight:900;letter-spacing:.12em;color:var(--deep)}
 .hero-date{margin-top:5px;color:#7199b4;font-weight:700;letter-spacing:.14em}
 .quote{margin:0 4px 12px;padding:16px 18px;border-radius:24px;background:rgba(255,255,255,.9);border:1px solid var(--line);box-shadow:0 10px 24px rgba(68,141,184,.12);text-align:center;font-size:17px;color:#376177}
@@ -52,7 +52,7 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font-size:15px;font-weight:900;color:var(--deep)}
 .mini-btn{height:32px;padding:0 12px;border-radius:999px;background:#f8fcff;border:1px solid var(--line);color:var(--deep);font-size:12px;font-weight:800}
 .weather-main{display:flex;align-items:center;gap:12px}
-.weather-icon{font-size:48px}
+.weather-icon{display:none}
 .temp{font-size:42px;line-height:1;font-weight:900;color:#3aa5e5}
 .weather-city{font-size:12px;font-weight:900;color:#315a72}
 .weather-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:11px}
@@ -136,7 +136,7 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .login-overlay{inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(180deg,#dff4ff,#f7fcff);padding:20px}
 .login-overlay.show{display:flex}
 .login-card{width:min(340px,100%);padding:26px;text-align:center}
-.login-card .icon{font-size:44px}
+.login-card .icon{display:none}
 .login-card h2{margin:8px 0}
 .login-card p{color:var(--muted);font-size:13px;margin-bottom:14px}
 .login-card input{text-align:center;letter-spacing:3px;margin-bottom:10px}
@@ -163,11 +163,11 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 </head>
 <body>
 <div class="splash" id="splash">
-  <div class="splash-card"><img src="/static/apple-touch-icon.png?v=photo6" alt="小蜥蜴"><strong>小蜥蜴日常</strong><span>今天也会认真听你说</span></div>
+  <div class="splash-card"><img src="/static/apple-touch-icon.png?v=photo7" alt="小蜥蜴"><strong>小蜥蜴日常</strong><span>今天也会认真听你说</span></div>
 </div>
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card card">
-    <div class="icon">🔐</div>
+    <div class="icon"></div>
     <h2>请输入密码</h2>
     <p>这是我们的小小心情空间</p>
     <label class="field"><input type="password" id="passwordInput" placeholder="密码" maxlength="40" autocomplete="current-password"></label>
@@ -184,7 +184,7 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
   </nav>
 
   <header class="hero">
-    <div class="hero-icon">☁️</div>
+    <div class="hero-icon"></div>
     <div class="hero-title">小蜥蜴日常</div>
     <div class="hero-date" id="todayDate">2026-05-25 周一</div>
   </header>
@@ -192,13 +192,13 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
   <section class="dashboard">
     <div class="card mini-card">
-      <div class="card-title"><span>☼ 今日天气</span><button class="mini-btn" onclick="useCurrentLocation()">定位</button></div>
+      <div class="card-title"><span>今日天气</span><button class="mini-btn" onclick="useCurrentLocation()">定位</button></div>
       <div class="weather-main"><div class="weather-icon" id="weatherIcon">☁️</div><div><div class="temp"><span id="weatherTemp">--</span>°C</div><div class="weather-city" id="weatherCity">厦门海沧</div></div></div>
       <div class="weather-meta"><span id="weatherText">加载中</span><span id="weatherHumidity">湿度 --</span><span id="weatherWind">风力 --</span></div>
       <div class="tip" id="weatherTip">正在看看今天适合怎么照顾自己...</div>
     </div>
     <div class="card mini-card analysis">
-      <div class="card-title"><span>♡ 智能提醒</span><button class="mini-btn" onclick="loadAnalysis()">更新</button></div>
+      <div class="card-title"><span>智能提醒</span><button class="mini-btn" onclick="loadAnalysis()">更新</button></div>
       <strong id="analysisSummary">正在整理最近的心情...</strong>
       <span id="analysisSuggestion">小蜥蜴会根据你的最近记录生成提醒。</span>
       <div class="tip" id="weatherRange">-- / --</div>
@@ -207,7 +207,7 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
   <section class="card checkin" id="checkinCard">
     <div class="check-head">
-      <div class="check-title">🗓️ 打卡日期</div>
+      <div class="check-title">打卡日期</div>
       <div class="check-right">
         <div class="check-stats">
           <div class="check-pill"><strong id="streakCount">0</strong><span>连续</span></div>
@@ -225,7 +225,7 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 
   <section class="card panel">
     <div class="notice" id="notice"><span id="noticeText"></span></div>
-    <div class="label">✨ 今日心情</div>
+    <div class="label">今日心情</div>
     <div class="mood-grid" id="moodGrid"></div>
     <div class="selected-strip" id="selectedStrip"></div>
   </section>
@@ -238,11 +238,11 @@ button{border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
       <label class="field"><input id="senderInput" maxlength="20" placeholder="发送给（可选）"></label>
       <label class="field"><input id="tagsInput" maxlength="120" placeholder="标签（可选）"></label>
     </div>
-    <button class="submit-btn" id="submitBtn" onclick="submitMood()">提交心情日记 ♡</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitMood()">提交心情日记</button>
   </section>
 
   <section class="card history">
-    <div class="history-head"><h2>▦ 历史记录</h2><div class="history-actions"><button class="refresh-btn" onclick="refreshNotes()">刷新</button></div></div>
+    <div class="history-head"><h2>历史记录</h2><div class="history-actions"><button class="refresh-btn" onclick="refreshNotes()">刷新</button></div></div>
     <div class="stats"><div class="stat"><strong id="totalCount">0</strong><span>条心情记录</span></div><div class="stat"><strong id="latestTime">暂无</strong><span>最近更新</span></div></div>
     <div class="queue-panel" id="queuePanel">
       <div class="queue-head">
@@ -263,7 +263,7 @@ const EMOJI_MOODS=['😋','🥲','🥹','🧐','🤓','😜','😝','😞','😟
 const MOODS=[...TEXT_MOODS,...EMOJI_MOODS];
 const REACTIONS=[{name:'抱抱你',emoji:'🤗'},{name:'收到啦',emoji:'💌'},{name:'想你了',emoji:'💗'}];
 const PENDING_KEY='moodNotesPendingQueueV1';
-let authPassword=localStorage.getItem('moodPassword')||'',selectedMoods=[],notes=[],pendingNotes=[],cloudAvailable=true,cloudDetail='',currentFilter='all',toastTimer=null,reactingId=null,calendarDate=new Date(),calendarOpen=false;
+let authPassword=sessionStorage.getItem('moodPassword')||'',selectedMoods=[],notes=[],pendingNotes=[],cloudAvailable=true,cloudDetail='',currentFilter='all',toastTimer=null,reactingId=null,calendarDate=new Date(),calendarOpen=false;
 const $=id=>document.getElementById(id);
 const moodGrid=$('moodGrid'),filters=$('filters'),historyList=$('historyList'),loading=$('loading'),toast=$('toast'),notice=$('notice'),noticeText=$('noticeText'),noteText=$('noteText'),submitBtn=$('submitBtn'),senderInput=$('senderInput'),tagsInput=$('tagsInput'),counter=$('counter');
 function headers(){const value={'Content-Type':'application/json'};if(authPassword)value['X-Mood-Password']=authPassword;return value}
@@ -271,13 +271,13 @@ function showToast(message){clearTimeout(toastTimer);toast.textContent=message;t
 function escapeHtml(value){const div=document.createElement('div');div.textContent=value||'';return div.innerHTML}
 function moodInfo(name){return MOODS.find(m=>m.name===name)||{name,emoji:name}}
 function shortMoodName(name){return name==='想一个人静静'?'想静静':name}
-function moodDisplay(name){const info=moodInfo(name);return TEXT_MOODS.some(m=>m.name===name)?`${info.emoji} ${escapeHtml(name)}`:escapeHtml(name)}
+function moodDisplay(name){return TEXT_MOODS.some(m=>m.name===name)?escapeHtml(name):escapeHtml(name)}
 function defaultReactions(){return Object.fromEntries(REACTIONS.map(reaction=>[reaction.name,0]))}
 function noteReactions(note){return {...defaultReactions(),...(note.reactions||{})}}
 function formatTime(iso){if(!iso)return'暂无';const date=new Date(iso);if(Number.isNaN(date.getTime()))return'刚刚';const now=new Date();const pad=n=>String(n).padStart(2,'0');const time=`${pad(date.getHours())}:${pad(date.getMinutes())}`;const sameDay=date.getFullYear()===now.getFullYear()&&date.getMonth()===now.getMonth()&&date.getDate()===now.getDate();if(sameDay)return`今天 ${time}`;return`${date.getMonth()+1}/${date.getDate()} ${time}`}
 function localDayKey(iso){const date=new Date(iso);if(Number.isNaN(date.getTime()))return'';const pad=n=>String(n).padStart(2,'0');return`${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`}
 function renderMoodButtons(){moodGrid.innerHTML=MOODS.map(mood=>`<button class="mood-btn" type="button" data-mood="${mood.name}" title="${mood.name}" aria-label="${mood.name}">${mood.emoji}</button>`).join('')}
-function renderFilters(){filters.innerHTML=[`<button class="filter ${currentFilter==='all'?'active':''}" data-filter="all">全部</button>`,...TEXT_MOODS.map(mood=>`<button class="filter ${currentFilter===mood.name?'active':''}" data-filter="${mood.name}">${mood.emoji}<span>${shortMoodName(mood.name)}</span></button>`)].join('')}
+function renderFilters(){filters.innerHTML=[`<button class="filter ${currentFilter==='all'?'active':''}" data-filter="all">全部</button>`,...TEXT_MOODS.map(mood=>`<button class="filter ${currentFilter===mood.name?'active':''}" data-filter="${mood.name}"><span>${shortMoodName(mood.name)}</span></button>`)].join('')}
 function updateToday(){const now=new Date();const pad=n=>String(n).padStart(2,'0');const week='日一二三四五六'[now.getDay()];$('todayDate').textContent=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} 周${week}`}
 function updateNotice(){const reminders={'生气':'他今天可能需要你多一点耐心和温柔。','委屈':'他心里可能有一点小委屈，记得抱抱他。','难过':'他今天心情不太好，一句温暖的话会很有用。','需要安慰':'他正在认真发出需要被靠近的信号。','😞':'他今天可能有点低落，轻轻陪一下就很好。','😟':'他好像有点担心，记得告诉他你在。','😣':'他可能撑得有点辛苦，给他一点软软的安慰。','😖':'他今天可能不太舒服，别让他一个人扛。','☹️':'他看起来需要一点点阳光和抱抱。','😓':'他可能有点累了，陪他慢慢缓一缓。','😱':'他可能被吓到了，先让他安心下来。','😨':'他可能有些害怕，温柔地靠近他。','😰':'他可能很紧张，告诉他慢慢来就好。'};const message=selectedMoods.map(m=>reminders[m]).find(Boolean);if(!message){notice.classList.remove('show');return}noticeText.textContent=message;notice.classList.add('show')}
 function updateSelectedStrip(){const strip=$('selectedStrip');if(!selectedMoods.length){strip.classList.remove('show');strip.textContent='';return}strip.textContent=`已选择：${selectedMoods.map(name=>moodInfo(name).emoji).join(' ')}（最多 3 个）`;strip.classList.add('show')}
@@ -293,15 +293,15 @@ function useCurrentLocation(){if(!navigator.geolocation){showToast('这个设备
 async function loadAnalysis(){if(NEEDS_PASSWORD&&!authPassword){$('analysisSummary').textContent='输入密码后显示智能分析';$('analysisSuggestion').textContent='小蜥蜴会根据你的最近记录生成提醒。';return}try{const res=await fetch('/api/analysis',{headers:headers()});const data=await res.json();if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(data.error||'analysis failed');$('analysisSummary').textContent=data.summary||'小蜥蜴看见了你最近的心情。';$('analysisSuggestion').textContent=data.suggestion||'先照顾好今天的自己。'}catch(error){$('analysisSummary').textContent='暂时没有取到分析';$('analysisSuggestion').textContent=error.message||'记录功能仍然正常，稍后再刷新看看。'}}
 async function fetchNotes(){loading.classList.add('show');try{const res=await fetch('/api/notes',{headers:headers()});const data=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(data.detail||data.error||'加载失败');cloudAvailable=true;cloudDetail='';notes=Array.isArray(data)?data:[];renderHistory();renderCalendar();loadAnalysis()}catch(error){cloudAvailable=false;cloudDetail=error.message||'';renderPendingNotes();renderHistory();renderCalendar();showToast('云端暂时连不上，可继续写，提交会本机暂存')}finally{loading.classList.remove('show')}}
 async function refreshNotes(){await fetchNotes();showToast('已刷新')}
-async function submitMood(){const text=noteText.value.trim();if(!selectedMoods.length)return showToast('请先选择心情');if(!text)return showToast('写几句话再发送吧');const pendingDraft=makePendingNote();submitBtn.disabled=true;submitBtn.textContent='正在发送...';try{const res=await fetch('/api/notes',{method:'POST',headers:headers(),body:JSON.stringify({mood:selectedMoods.join(','),text,sender:senderInput.value.trim(),tags:tagsInput.value.trim()})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok){cloudAvailable=false;queuePendingNote(pendingDraft);clearForm();showToast('已保存到本机暂存，云端恢复后再同步');return}cloudAvailable=true;showToast('小蜥蜴收到啦');clearForm();await fetchNotes()}catch(error){cloudAvailable=false;queuePendingNote(pendingDraft);clearForm();showToast('已保存到本机暂存，云端恢复后再同步')}finally{submitBtn.disabled=false;submitBtn.textContent='提交心情日记 ♡'}}
+async function submitMood(){const text=noteText.value.trim();if(!selectedMoods.length)return showToast('请先选择心情');if(!text)return showToast('写几句话再发送吧');const pendingDraft=makePendingNote();submitBtn.disabled=true;submitBtn.textContent='正在发送...';try{const res=await fetch('/api/notes',{method:'POST',headers:headers(),body:JSON.stringify({mood:selectedMoods.join(','),text,sender:senderInput.value.trim(),tags:tagsInput.value.trim()})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok){cloudAvailable=false;queuePendingNote(pendingDraft);clearForm();showToast('已保存到本机暂存，云端恢复后再同步');return}cloudAvailable=true;showToast('小蜥蜴收到啦');clearForm();await fetchNotes()}catch(error){cloudAvailable=false;queuePendingNote(pendingDraft);clearForm();showToast('已保存到本机暂存，云端恢复后再同步')}finally{submitBtn.disabled=false;submitBtn.textContent='提交心情日记'}}
 async function syncPendingNotes(){if(!pendingNotes.length)return showToast(cloudAvailable?'没有暂存记录':'云端还没恢复，暂无可同步记录');if(NEEDS_PASSWORD&&!authPassword){handleUnauthorized();return}let synced=0;const failed=[];loading.classList.add('show');try{for(const note of pendingNotes){try{const res=await fetch('/api/notes',{method:'POST',headers:headers(),body:JSON.stringify({mood:String(note.mood||'').split('+').join(','),text:note.text,sender:note.sender,tags:note.tags})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();failed.push(note);break}if(!res.ok)throw new Error(payload.error||'同步失败');synced++}catch(error){failed.push(note)}}cloudAvailable=failed.length===0;pendingNotes=failed;savePendingNotes();await fetchNotes();showToast(synced?`已同步 ${synced} 条${failed.length?`，${failed.length} 条仍暂存`:''}`:'云端仍不可用，暂存继续保留')}finally{loading.classList.remove('show')}}
 function clearPendingNotes(){if(!pendingNotes.length)return;if(!confirm('确定清空本机暂存吗？清空后这些未同步记录会消失。'))return;pendingNotes=[];savePendingNotes();renderHistory();renderCalendar();showToast('已清空本机暂存')}
 async function checkCloudStorage(){if(NEEDS_PASSWORD&&!authPassword){handleUnauthorized();return}try{const res=await fetch('/api/storage-check',{headers:headers()});const data=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}cloudAvailable=!!data.storage_ok;cloudDetail=data.storage_ok?'JSONBin 连接正常，可以尝试同步暂存。':(data.detail||'JSONBin 连接失败');renderPendingNotes();showToast(data.storage_ok?'云端正常':'云端仍不可用')}catch(error){cloudAvailable=false;cloudDetail='检查失败：网络或服务暂时无响应';renderPendingNotes();showToast('云端检查失败')}}
 async function addReaction(id,reaction){reactingId=`${id}:${reaction}`;renderHistory();try{const res=await fetch(`/api/notes/${id}/reactions`,{method:'POST',headers:headers(),body:JSON.stringify({reaction})});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok){showToast(payload.error||'回应失败');return}notes=notes.map(note=>note.id===id?payload.note:note);renderHistory();renderCalendar();showToast('回应已送达')}catch(error){showToast('回应失败，请稍后再试')}finally{reactingId=null;renderHistory()}}
 async function deleteNote(id){if(!confirm('确定删除这条记录吗？'))return;try{const res=await fetch(`/api/notes/${id}`,{method:'DELETE',headers:headers()});const payload=await res.json().catch(()=>({}));if(res.status===401){handleUnauthorized();return}if(!res.ok)throw new Error(payload.error||'delete failed');notes=notes.filter(note=>note.id!==id);renderHistory();renderCalendar();loadAnalysis();showToast('已删除')}catch(error){showToast(error.message||'删除失败')}}
-async function doLogin(){const password=$('passwordInput').value.trim();if(!password)return;try{const res=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});if(!res.ok){showToast('密码不正确');return}authPassword=password;localStorage.setItem('moodPassword',password);$('loginOverlay').classList.remove('show');await fetchNotes()}catch(error){showToast('验证失败')}}
-function handleUnauthorized(){authPassword='';localStorage.removeItem('moodPassword');$('loginOverlay').classList.add('show');showToast('密码已失效，请重新输入')}
-function renderHistory(){const source=allNotes();const filtered=currentFilter==='all'?source:source.filter(note=>String(note.mood||'').split('+').includes(currentFilter));$('totalCount').textContent=notes.length;$('latestTime').textContent=notes.length?formatTime(notes[0].time):'暂无';renderPendingNotes();if(!filtered.length){historyList.innerHTML='<div class="empty">还没有记录，写下今天的心情吧。</div>';return}historyList.innerHTML=filtered.map(note=>{const moodTags=String(note.mood||'').split('+').filter(Boolean).map(name=>`<span class="mood-tag">${moodDisplay(name)}</span>`).join('');const tags=Array.isArray(note.tags)?note.tags:normalizeTagsForView(note.tags);const tagHtml=tags.length?`<div class="tag-row">${tags.map(tag=>`<span class="tag">#${escapeHtml(tag)}</span>`).join('')}</div>`:'';const reactions=noteReactions(note);const reactionHtml=note.pending?'<div class="reaction-row"><span class="mood-tag">等待同步到云端</span></div>':`<div class="reaction-row">${REACTIONS.map(item=>{const key=`${note.id}:${item.name}`;return`<button class="reaction-btn" onclick="addReaction(${Number(note.id)}, '${item.name}')" ${reactingId===key?'disabled':''}>${item.emoji} ${item.name} ${Number(reactions[item.name]||0)}</button>`}).join('')}</div>`;const deleteHtml=note.pending?`<button class="delete-btn" onclick="deletePendingNote('${note.localId}')">删除暂存</button>`:`<button class="delete-btn" onclick="deleteNote(${Number(note.id)})">删除</button>`;return`<article class="note ${note.pending?'pending':''}"><div class="note-top"><div class="mood-tags">${moodTags}${note.pending?'<span class="mood-tag">本机暂存</span>':''}</div><span class="time">${formatTime(note.time)}</span></div><div class="meta">来自 ${escapeHtml(note.sender||'匿名')}</div><div class="note-text">${escapeHtml(note.text)}</div>${tagHtml}${reactionHtml}${deleteHtml}</article>`}).join('')}
+async function doLogin(){const password=$('passwordInput').value.trim();if(!password)return;try{const res=await fetch('/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password})});if(!res.ok){showToast('密码不正确');return}authPassword=password;sessionStorage.setItem('moodPassword',password);$('loginOverlay').classList.remove('show');await fetchNotes()}catch(error){showToast('验证失败')}}
+function handleUnauthorized(){authPassword='';sessionStorage.removeItem('moodPassword');$('loginOverlay').classList.add('show');showToast('密码已失效，请重新输入')}
+function renderHistory(){const source=allNotes();const filtered=currentFilter==='all'?source:source.filter(note=>String(note.mood||'').split('+').includes(currentFilter));$('totalCount').textContent=notes.length;$('latestTime').textContent=notes.length?formatTime(notes[0].time):'暂无';renderPendingNotes();if(!filtered.length){historyList.innerHTML='<div class="empty">还没有记录，写下今天的心情吧。</div>';return}historyList.innerHTML=filtered.map(note=>{const moodTags=String(note.mood||'').split('+').filter(Boolean).map(name=>`<span class="mood-tag">${moodDisplay(name)}</span>`).join('');const tags=Array.isArray(note.tags)?note.tags:normalizeTagsForView(note.tags);const tagHtml=tags.length?`<div class="tag-row">${tags.map(tag=>`<span class="tag">#${escapeHtml(tag)}</span>`).join('')}</div>`:'';const reactions=noteReactions(note);const reactionHtml=note.pending?'<div class="reaction-row"><span class="mood-tag">等待同步到云端</span></div>':`<div class="reaction-row">${REACTIONS.map(item=>{const key=`${note.id}:${item.name}`;return`<button class="reaction-btn" onclick="addReaction(${Number(note.id)}, '${item.name}')" ${reactingId===key?'disabled':''}>${item.name} ${Number(reactions[item.name]||0)}</button>`}).join('')}</div>`;const deleteHtml=note.pending?`<button class="delete-btn" onclick="deletePendingNote('${note.localId}')">删除暂存</button>`:`<button class="delete-btn" onclick="deleteNote(${Number(note.id)})">删除</button>`;return`<article class="note ${note.pending?'pending':''}"><div class="note-top"><div class="mood-tags">${moodTags}${note.pending?'<span class="mood-tag">本机暂存</span>':''}</div><span class="time">${formatTime(note.time)}</span></div><div class="meta">来自 ${escapeHtml(note.sender||'匿名')}</div><div class="note-text">${escapeHtml(note.text)}</div>${tagHtml}${reactionHtml}${deleteHtml}</article>`}).join('')}
 function normalizeTagsForView(value){return String(value||'').split(',').map(tag=>tag.trim()).filter(Boolean)}
 function deletePendingNote(localId){pendingNotes=pendingNotes.filter(note=>note.localId!==localId);savePendingNotes();renderHistory();renderCalendar();showToast('已删除暂存记录')}
 function renderCalendar(){const year=calendarDate.getFullYear();const month=calendarDate.getMonth();$('calendarTitle').textContent=`${year}年${String(month+1).padStart(2,'0')}月`;const byDay={};allNotes().forEach(note=>{const day=localDayKey(note.time);if(!day)return;byDay[day]=byDay[day]||[];byDay[day].push(...String(note.mood||'').split('+').filter(Boolean))});const first=new Date(year,month,1);const days=new Date(year,month+1,0).getDate();const start=(first.getDay()+6)%7;let html='';for(let i=0;i<start;i++)html+='<div class="day blank"></div>';const todayKey=localDayKey(new Date().toISOString());let monthCount=0;for(let d=1;d<=days;d++){const key=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const moods=byDay[key]||[];if(moods.length)monthCount++;const icons=[...new Set(moods.map(name=>moodInfo(name).emoji))].slice(0,4).map(icon=>`<span>${icon}</span>`).join('');html+=`<div class="day ${key===todayKey?'today':''}"><span class="day-num">${d}</span><div class="day-moods">${icons}</div></div>`}$('calendarGrid').innerHTML=html;$('monthCount').textContent=monthCount;$('streakCount').textContent=countStreak(byDay)}

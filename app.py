@@ -9,6 +9,7 @@ accidentally overwritten by an empty temporary list.
 import json
 import os
 import threading
+import time
 from datetime import datetime, timezone
 
 import requests
@@ -22,6 +23,7 @@ ACCESS_PASSWORD = os.environ.get("MOOD_PASSWORD", "").strip()
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
 DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip() or "deepseek-chat"
 DEFAULT_WEATHER_CITY = os.environ.get("DEFAULT_WEATHER_CITY", "厦门海沧").strip() or "厦门海沧"
+JSONBIN_TIMEOUT = int(os.environ.get("JSONBIN_TIMEOUT", "25") or "25")
 
 TEXT_MOODS = [
     "开心",
@@ -188,14 +190,22 @@ def jsonbin_configured():
 
 
 def load_notes_from_jsonbin():
-    try:
-        response = requests.get(
-            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
-            headers=jsonbin_headers(),
-            timeout=10,
-        )
-    except requests.RequestException as exc:
-        raise StorageUnavailable(f"JSONBin 读取失败: {exc}") from exc
+    last_error = None
+    response = None
+    for attempt in range(2):
+        try:
+            response = requests.get(
+                f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}/latest",
+                headers=jsonbin_headers(),
+                timeout=JSONBIN_TIMEOUT,
+            )
+            break
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt == 0:
+                time.sleep(0.8)
+    if response is None:
+        raise StorageUnavailable(f"JSONBin 读取失败: {last_error}") from last_error
 
     if response.status_code != 200:
         raise StorageUnavailable(f"JSONBin 读取失败: {response.status_code} {response.text[:160]}")
@@ -206,15 +216,23 @@ def load_notes_from_jsonbin():
 
 def save_notes_to_jsonbin(notes):
     payload = {"notes": normalize_notes(notes), "updated_at": utc_now_iso()}
-    try:
-        response = requests.put(
-            f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}",
-            json=payload,
-            headers=jsonbin_headers(),
-            timeout=10,
-        )
-    except requests.RequestException as exc:
-        raise StorageUnavailable(f"JSONBin 保存失败: {exc}") from exc
+    last_error = None
+    response = None
+    for attempt in range(2):
+        try:
+            response = requests.put(
+                f"https://api.jsonbin.io/v3/b/{JSONBIN_BIN_ID}",
+                json=payload,
+                headers=jsonbin_headers(),
+                timeout=JSONBIN_TIMEOUT,
+            )
+            break
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt == 0:
+                time.sleep(0.8)
+    if response is None:
+        raise StorageUnavailable(f"JSONBin 保存失败: {last_error}") from last_error
 
     if response.status_code not in (200, 201):
         raise StorageUnavailable(f"JSONBin 保存失败: {response.status_code} {response.text[:160]}")

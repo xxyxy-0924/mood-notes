@@ -2,7 +2,7 @@
   "name": "小蜥蜴日常",
   "short_name": "小蜥蜴",
   "description": "每天记录心情、天气和打卡日期的小空间。",
-  "start_url": "/?source=pwa&v=blue1",
+  "start_url": "/?source=pwa&v=blue2",
   "scope": "/",
   "display": "fullscreen",
   "display_override": [
@@ -18,13 +18,13 @@
   ],
   "icons": [
     {
-      "src": "/static/app-icon-192.png?v=photo6",
+      "src": "/static/app-icon-192.png?v=photo7",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/static/app-icon-512.png?v=photo6",
+      "src": "/static/app-icon-512.png?v=photo7",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
